@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Exam Digitizer</title>
+
+  <!-- External dependencies for equation rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/13.0.1/markdown-it.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/markdown-it-texmath/texmath.min.js"></script>
+
+  <!-- Custom styles and logic -->
+  <link rel="stylesheet" href="style.css" />
+  <script src="script.js" defer></script>
+</head>
+
+<body class="view-upload">
+  <!-- App Header -->
+  <header class="app-header no-print">
+    <div class="header-logo">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+        <polyline points="14 2 14 8 20 8"></polyline>
+        <line x1="16" y1="13" x2="8" y2="13"></line>
+        <line x1="16" y1="17" x2="8" y2="17"></line>
+        <polyline points="10 9 9 9 8 9"></polyline>
+      </svg>
+      <h1>Exam Digitizer</h1>
+    </div>
+    <div class="header-actions">
+      <!-- Back to Upload (New Exam) button - only in editor view -->
+      <button id="btn-new-exam" class="btn btn-secondary" style="display: none;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        New Exam
+      </button>
+
+      <!-- Settings button - always available -->
+      <button id="btn-settings" class="btn btn-secondary">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+        Settings
+      </button>
+
+      <!-- Print button - only in editor view -->
+      <button id="btn-print" class="btn btn-primary" style="display: none;" onclick="window.print()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 6 2 18 2 18 9"></polyline>
+          <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+          <rect x="6" y="14" width="12" height="8"></rect>
+        </svg>
+        Print / Save as PDF
+      </button>
+    </div>
+  </header>
+
+  <!-- 1. Upload Screen Container -->
+  <div id="upload-container" class="upload-screen no-print">
+    <div class="upload-card">
+      <div class="upload-header">
+        <h2>Digitize Your Exam</h2>
+        <p>Convert your paper exam PDF into clean, editable, and printable Markdown with LaTeX equations.</p>
+      </div>
+
+      <!-- Drag and drop zone -->
+      <div id="upload-zone" class="upload-zone">
+        <input type="file" id="file-input" accept=".pdf" style="display: none;" />
+        
+        <div class="upload-zone-content" id="upload-idle-state">
+          <div class="upload-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+          </div>
+          <h3>Drag & drop your exam PDF here</h3>
+          <p class="text-muted">or click to browse files</p>
+          <button class="btn btn-secondary btn-sm" id="btn-browse">Browse Files</button>
+          <p class="upload-size-limit">PDF files up to 20MB</p>
+        </div>
+
+        <div class="upload-zone-content" id="upload-selected-state" style="display: none;">
+          <div class="file-card">
+            <div class="file-card-icon">📄</div>
+            <div class="file-card-details">
+              <div class="file-name" id="selected-file-name">math_midterm.pdf</div>
+              <div class="file-size text-muted" id="selected-file-size">2.4 MB</div>
+            </div>
+            <button class="btn-remove-file" id="btn-remove-file" title="Remove file">&times;</button>
+          </div>
+
+          <button id="btn-process" class="btn btn-primary btn-lg btn-block">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+            </svg>
+            Process with Gemini
+          </button>
+        </div>
+      </div>
+
+      <div id="upload-error" class="alert alert-danger" style="display: none;">
+        ⚠️ <span id="error-message">An error occurred</span>
+      </div>
+
+      <div class="upload-tip">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+        <span>Your API key and files are processed strictly in your browser. Nothing is uploaded to any server other than Google's official Gemini API.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Editor Screen Container -->
+  <main id="editor-container" class="app-container" style="display: none;">
+    <section class="editor-column no-print">
+      <div class="panel-header">
+        <h3>1. Raw Gemini Markdown</h3>
+        <span class="status-indicator" id="status-text">Synced</span>
+      </div>
+      <textarea id="gemini-output" placeholder="Type raw markdown here..."></textarea>
+    </section>
+
+    <section class="preview-column">
+      <div class="panel-header no-print">
+        <h3>2. Live Browser Rendering</h3>
+        <span class="preview-badge">A4 Document</span>
+      </div>
+      <div class="pdf-wrapper">
+        <div id="pdf-container"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 3. Settings Modal -->
+  <div id="settings-modal" class="modal-overlay no-print" style="display: none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Settings</h3>
+        <button class="modal-close-x" id="btn-close-modal-x">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="input-api-key">Gemini API Key</label>
+          <div class="api-key-input-container">
+            <input type="password" id="input-api-key" placeholder="Enter your Google AI Studio API key..." />
+            <button id="btn-toggle-key-visibility" class="btn-toggle-visibility" title="Toggle visibility">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
+          <p class="form-help">Get your API key for free from <a href="https://aistudio.google.com/" target="_blank" rel="noopener noreferrer">Google AI Studio</a>.</p>
+        </div>
+
+        <div class="form-group">
+          <label for="select-model">Gemini Model</label>
+          <select id="select-model">
+            <!-- Dynamically populated -->
+          </select>
+        </div>
+
+        <div class="form-group" id="custom-model-group" style="display: none;">
+          <label for="input-custom-model">Custom Model ID</label>
+          <div class="api-key-input-container">
+            <input type="text" id="input-custom-model" placeholder="e.g. gemini-3.5-flash-medium" style="font-family: var(--font-mono);" />
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="btn-settings-cancel">Cancel</button>
+        <button class="btn btn-primary" id="btn-settings-save">Save Settings</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Processing Overlay -->
+  <div id="processing-overlay" class="modal-overlay no-print" style="display: none;">
+    <div class="processing-card">
+      <div class="spinner"></div>
+      <h3>Digitizing Exam...</h3>
+      <p id="processing-status" class="text-muted">Reading PDF file...</p>
+      
+      <button class="btn btn-danger btn-sm" id="btn-cancel-processing" style="margin-top: 20px;">
+        Cancel
+      </button>
+    </div>
+  </div>
+</body>
+
+</html>
