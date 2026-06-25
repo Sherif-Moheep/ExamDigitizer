@@ -1,0 +1,205 @@
+@import 'katex/dist/katex.min.css';
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom Scrollbars */
+textarea::-webkit-scrollbar,
+.pdf-wrapper::-webkit-scrollbar,
+.modal-body::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+textarea::-webkit-scrollbar-track,
+.pdf-wrapper::-webkit-scrollbar-track,
+.modal-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+textarea::-webkit-scrollbar-thumb,
+.pdf-wrapper::-webkit-scrollbar-thumb,
+.modal-body::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+textarea::-webkit-scrollbar-thumb:hover,
+.pdf-wrapper::-webkit-scrollbar-thumb:hover,
+.modal-body::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* --- MARKDOWN TYPOGRAPHY (PDF CONTAINER) --- */
+#pdf-container h1,
+#pdf-container h2,
+#pdf-container h3,
+#pdf-container h4 {
+  margin-top: 1.2em;
+  margin-bottom: 0.6em;
+  line-height: 1.25;
+  color: #0f172a; /* text-primary */
+}
+
+#pdf-container h1 {
+  font-size: 1.85rem;
+  text-align: center;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  border-bottom: 2px solid #0f172a; /* text-primary */
+  padding-bottom: 16px;
+  margin-top: 0;
+  margin-bottom: 28px;
+}
+
+#pdf-container h2 {
+  font-size: 1.45rem;
+  border-bottom: 1px solid #e2e8f0; /* border-color */
+  padding-bottom: 6px;
+  margin-top: 1.8em;
+}
+
+#pdf-container h3 {
+  font-size: 1.2rem;
+}
+
+#pdf-container p,
+#pdf-container ul,
+#pdf-container ol {
+  margin-bottom: 1.15em;
+}
+
+#pdf-container ul,
+#pdf-container ol {
+  padding-left: 2.2em;
+}
+
+#pdf-container li {
+  margin-bottom: 0.45em;
+}
+
+/* Custom question block styling */
+.question-paragraph {
+  font-size: 1.025rem;
+  margin-top: 1.8em;
+  margin-bottom: 1.2em;
+  line-height: 1.7;
+}
+
+
+
+/* Exam Metadata Grid */
+.exam-metadata-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px 28px;
+  border-top: 2px double #0f172a; /* text-primary */
+  border-bottom: 2px double #0f172a; /* text-primary */
+  padding: 18px 0;
+  margin-top: 10px;
+  margin-bottom: 35px;
+  font-size: 0.85rem;
+}
+
+.metadata-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px dotted #e2e8f0; /* border-color */
+  padding-bottom: 6px;
+}
+
+.metadata-label {
+  font-weight: 700;
+  color: #475569; /* text-secondary */
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+}
+
+.metadata-value {
+  color: #0f172a; /* text-primary */
+  font-weight: 600;
+  text-align: right;
+}
+
+/* Rendered Figures notes & ASCII styling */
+.figure-note-container {
+  margin: 20px 0;
+  padding: 16px;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-left: 4px solid #4f46e5; /* primary */
+  border-radius: 10px; /* radius-md */
+  font-size: 0.85rem;
+  color: #475569; /* text-secondary */
+}
+
+.figure-ascii-diagram {
+  font-family: 'Fira Code', monospace;
+  white-space: pre;
+  background-color: #f1f5f9;
+  padding: 14px;
+  border-radius: 6px; /* radius-sm */
+  border: 1px solid #e2e8f0;
+  margin-top: 10px;
+  overflow-x: auto;
+  line-height: 1.35;
+  font-size: 13px;
+  color: #0f172a;
+}
+
+/* --- THE PHYSICAL WRITING LINES --- */
+.solve-space-container {
+  margin-top: 20px;
+  margin-bottom: 35px;
+  border-left: 3px solid #cbd5e1;
+  padding-left: 14px;
+  break-inside: auto;
+}
+
+.writing-line {
+  height: 32px;
+  border-bottom: 1px solid #e2e8f0;
+  width: 100%;
+}
+
+p, ul, ol, .katex-display {
+  break-inside: auto;
+}
+
+.katex-display {
+  margin: 18px 0 !important;
+}
+
+hr {
+  margin: 32px 0;
+  border: 0;
+  border-top: 2px solid #e2e8f0;
+}
+
+/* --- PRINT UI STYLE SYSTEM --- */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 12mm;
+  }
+
+  html,
+  body {
+    background: white !important;
+    height: auto;
+    overflow: visible;
+  }
+
+  body {
+    display: block;
+    padding: 0;
+  }
+
+  .writing-line {
+    border-bottom: 1px solid #bdf !important;
+  }
+}
