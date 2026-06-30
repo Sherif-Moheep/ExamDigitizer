@@ -4,7 +4,7 @@ import texmath from 'markdown-it-texmath';
 import katex from 'katex';
 import { MarkdownParser } from '../../domain/services/MarkdownParser';
 
-export class MarkdownItParser implements MarkdownParser {
+export class MarkdownParserImpl implements MarkdownParser {
   private md: markdownIt;
 
   constructor() {

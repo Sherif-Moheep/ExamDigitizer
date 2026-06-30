@@ -45,24 +45,36 @@ textarea::-webkit-scrollbar-thumb:hover,
 
 #pdf-container h1 {
   font-size: 1.85rem;
-  text-align: center;
+  text-align: left;
   font-weight: 800;
   letter-spacing: -0.02em;
-  border-bottom: 2px solid #0f172a; /* text-primary */
-  padding-bottom: 16px;
   margin-top: 0;
-  margin-bottom: 28px;
+  margin-bottom: 14px;
 }
 
 #pdf-container h2 {
   font-size: 1.45rem;
-  border-bottom: 1px solid #e2e8f0; /* border-color */
-  padding-bottom: 6px;
-  margin-top: 1.8em;
+  font-weight: 700;
+  margin-top: 1.2em;
+  margin-bottom: 0.6em;
 }
 
 #pdf-container h3 {
-  font-size: 1.2rem;
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-top: 1.8em;
+  margin-bottom: 0.6em;
+  page-break-after: avoid;
+  break-after: avoid;
+}
+
+#pdf-container h4 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-top: 1.4em;
+  margin-bottom: 0.5em;
+  page-break-after: avoid;
+  break-after: avoid;
 }
 
 #pdf-container p,
@@ -73,7 +85,15 @@ textarea::-webkit-scrollbar-thumb:hover,
 
 #pdf-container ul,
 #pdf-container ol {
-  padding-left: 2.2em;
+  padding-left: 1.8em;
+}
+
+#pdf-container ul {
+  list-style-type: disc;
+}
+
+#pdf-container ol {
+  list-style-type: decimal;
 }
 
 #pdf-container li {
@@ -90,40 +110,7 @@ textarea::-webkit-scrollbar-thumb:hover,
 
 
 
-/* Exam Metadata Grid */
-.exam-metadata-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px 28px;
-  border-top: 2px double #0f172a; /* text-primary */
-  border-bottom: 2px double #0f172a; /* text-primary */
-  padding: 18px 0;
-  margin-top: 10px;
-  margin-bottom: 35px;
-  font-size: 0.85rem;
-}
 
-.metadata-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px dotted #e2e8f0; /* border-color */
-  padding-bottom: 6px;
-}
-
-.metadata-label {
-  font-weight: 700;
-  color: #475569; /* text-secondary */
-  text-transform: uppercase;
-  font-size: 0.72rem;
-  letter-spacing: 0.05em;
-}
-
-.metadata-value {
-  color: #0f172a; /* text-primary */
-  font-weight: 600;
-  text-align: right;
-}
 
 /* Rendered Figures notes & ASCII styling */
 .figure-note-container {
@@ -137,6 +124,7 @@ textarea::-webkit-scrollbar-thumb:hover,
   color: #475569; /* text-secondary */
 }
 
+#pdf-container pre,
 .figure-ascii-diagram {
   font-family: 'Fira Code', monospace;
   white-space: pre;

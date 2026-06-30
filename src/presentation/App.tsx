@@ -2,8 +2,8 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { DependencyProvider } from './di/DiContext';
 import { CompileExamUseCase } from '../domain/usecases/CompileExamUseCase';
 import { DigitizeExamUseCase } from '../domain/usecases/DigitizeExamUseCase';
-import { MarkdownItParser } from '../data/services/MarkdownItParser';
-import { LocalSettingsRepository } from '../data/repositories/LocalSettingsRepository';
+import { MarkdownParserImpl } from '../data/services/MarkdownParserImpl.ts';
+import { SettingsRepositoryImpl } from '../data/repositories/SettingsRepositoryImpl.ts';
 import { GeminiServiceImpl } from '../data/services/GeminiServiceImpl';
 import { useUploadScreen } from './hooks/useUploadScreen';
 import { useExamEditor } from './hooks/useExamEditor';
@@ -104,9 +104,9 @@ const DigitizerApp: React.FC = () => {
 
 export const App: React.FC = () => {
   const dependencies = useMemo(() => {
-    const parser = new MarkdownItParser();
+    const parser = new MarkdownParserImpl();
     const compileExamUseCase = new CompileExamUseCase(parser);
-    const settingsRepository = new LocalSettingsRepository();
+    const settingsRepository = new SettingsRepositoryImpl();
     const geminiService = new GeminiServiceImpl();
     const digitizeExamUseCase = new DigitizeExamUseCase(geminiService);
 

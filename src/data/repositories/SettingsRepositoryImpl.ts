@@ -1,8 +1,8 @@
 import { SettingsRepository } from '../../domain/repositories/SettingsRepository';
 
-export class LocalSettingsRepository implements SettingsRepository {
-  private API_KEY_KEY = 'clearexam_api_key';
-  private MODEL_KEY = 'clearexam_model';
+export class SettingsRepositoryImpl implements SettingsRepository {
+  private API_KEY_KEY = 'examdigitizer_api_key';
+  private MODEL_KEY = 'examdigitizer_model';
   private DEFAULT_MODEL = 'gemini-3.5-flash';
 
   getApiKey(): string {
