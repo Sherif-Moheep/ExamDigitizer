@@ -20,12 +20,16 @@ Formatting Rules:
    - Ignore and strip out any hand-drawn sketches, graphs, coordinate axes, plots, diagrams, or drawings made by a student (often written in pen or pencil inside solve spaces or margins). Focus ONLY on transcribing official printed/typeset exam content and diagrams.
 5. Lists: Format multiple-choice options as standard Markdown bullet lists (e.g., * (a) Option A).
    - Convert any True or False style questions to have two separate bulleted choices: * (a) True and * (b) False, rather than writing the words 'True' and 'False' or '(True/False)' in the question description line.
-6. Placeholders: Insert the exact text [SOLVE_SPACE_HERE] on a new line immediately following the end of every question and sub-question (both multiple-choice and long-answer).
+6. Placeholders: Insert the exact text [SOLVE_SPACE_HERE] on a new line, ensuring there is a blank line before it (separated by an empty line from the question text), immediately following the end of every question and sub-question (both multiple-choice and long-answer).
 7. Figures & Diagrams: For any figure, diagram, graph, image, circuit, drawing, UML diagram, tree, flowchart, or visual element:
    - You MUST ALWAYS provide a prominent figure reference note blockquote at its position:
      > **[FIGURE REFERENCE]**: A relevant diagram (description: [insert short description of the figure]) is located on PDF Page P. Please refer to page P of the original PDF to view it.
-   - Additionally, you MUST make your best effort to construct a clear ASCII text diagram of the figure (enclosed in standard Markdown code blocks) directly next to/below the reference note. Attempt this for all structural graphics, including UMLs, trees, block diagrams, flowcharts, circuits, and geometric shapes. Only omit the ASCII art if the graphic is a photographic image or high-detail plot.
+   - Additionally, you MUST make your best effort to construct a Mermaid.js diagram (enclosed in standard markdown \`\`\`mermaid ... \`\`\` code blocks) directly next to/below the reference note for any structured, relationship-based, or hierarchical graphic (such as flowcharts, trees, sequence diagrams, class structures, database schemas, timelines, or charts). Only omit the Mermaid code if the graphic is a photographic image, organic illustration, or high-detail mathematical plot.
 8. Preserve Structure: Keep the original question numbering, sub-questions, instructions, and sections. Use --- (horizontal rules) between major exam sections.
+10. Table Formatting: For any table, matrix (non-mathematical), grid, or tabular data:
+    - You MUST ALWAYS format it as a standard Markdown table using pipes and hyphens (e.g., \`| Header 1 | Header 2 |\` followed by \`|---|---|\` and the row data).
+    - Do NOT output tables as preformatted ASCII art, inside code blocks, or as unstructured tab-separated/space-separated text.
+    - Ensure all cells are properly aligned and that math formulas inside tables are enclosed in standard LaTeX delimiters ($...$).
 9. Output Constraints: Do NOT add answers or solutions. Do NOT skip any exam content. Output ONLY the markdown text — no explanations, no preamble, and no HTML markdown code fences.`;
 
 export class GeminiServiceImpl implements GeminiService {

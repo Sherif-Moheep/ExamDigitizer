@@ -1,4 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import mermaid from 'mermaid';
+
+// Initialize mermaid once
+mermaid.initialize({
+  startOnLoad: false,
+  theme: 'default',
+  securityLevel: 'loose',
+  flowchart: {
+    useMaxWidth: true,
+    htmlLabels: true,
+  },
+});
 
 interface EditorScreenProps {
   markdown: string;
@@ -13,6 +25,17 @@ export const EditorScreen: React.FC<EditorScreenProps> = ({
   syncStatus,
   htmlPreview,
 }) => {
+  useEffect(() => {
+    const mermaidElements = document.querySelectorAll('#pdf-container .mermaid');
+    if (mermaidElements.length > 0) {
+      mermaid.run({
+        nodes: mermaidElements as any,
+      }).catch(err => {
+        console.warn('Mermaid rendering failed:', err);
+      });
+    }
+  }, [htmlPreview]);
+
   return (
     <main className="flex-1 flex overflow-hidden p-5 gap-5 h-[calc(100vh-64px)] print:block print:p-0 print:m-0 print:h-auto print:overflow-visible">
       {/* 1. Editor column */}

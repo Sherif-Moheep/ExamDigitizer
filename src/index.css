@@ -139,6 +139,23 @@ textarea::-webkit-scrollbar-thumb:hover,
   color: #0f172a;
 }
 
+#pdf-container pre.mermaid {
+  background: transparent;
+  border: none;
+  padding: 0;
+  overflow: visible;
+  margin: 16px 0;
+}
+
+#pdf-container pre.mermaid svg {
+  max-width: 100% !important;
+  max-height: 320px !important;
+  width: auto !important;
+  height: auto !important;
+  display: block;
+  margin: 0 auto;
+}
+
 /* --- THE PHYSICAL WRITING LINES --- */
 .solve-space-container {
   margin-top: 20px;
@@ -168,6 +185,33 @@ hr {
   border-top: 2px solid #e2e8f0;
 }
 
+/* --- TABLES --- */
+#pdf-container table {
+  width: fit-content;
+  max-width: 100%;
+  border-collapse: collapse;
+  margin: 20px auto;
+  font-size: 0.95rem;
+  break-inside: avoid;
+}
+
+#pdf-container th,
+#pdf-container td {
+  padding: 10px 12px;
+  border: 1px solid #cbd5e1;
+  text-align: left;
+}
+
+#pdf-container th {
+  background-color: #f1f5f9;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+#pdf-container tr:nth-child(even) {
+  background-color: #f8fafc;
+}
+
 /* --- PRINT UI STYLE SYSTEM --- */
 @media print {
   @page {
@@ -189,5 +233,10 @@ hr {
 
   .writing-line {
     border-bottom: 1px solid #bdf !important;
+  }
+
+  #pdf-container pre.mermaid svg {
+    max-height: 75mm !important;
+    break-inside: avoid;
   }
 }
