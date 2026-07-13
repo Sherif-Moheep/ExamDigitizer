@@ -51,7 +51,7 @@ export const UploadScreen: React.FC<UploadScreenProps> = ({
             Digitize Your Exam
           </h2>
           <p className="text-text-secondary text-[0.95rem] leading-[1.5]">
-            Convert your paper exam PDF into clean, editable, and printable Markdown with LaTeX equations.
+            Convert your paper exam PDFs into clean, editable, and print-ready digital exams.
           </p>
         </div>
 
@@ -152,7 +152,7 @@ export const UploadScreen: React.FC<UploadScreenProps> = ({
                 >
                   <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
                 </svg>
-                Process with Gemini
+                Digitize Exam
               </button>
             </div>
           )}

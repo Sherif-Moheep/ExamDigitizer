@@ -46,7 +46,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
                 value={apiKey}
                 onChange={(e) => setApiKey(e.target.value)}
                 placeholder="Enter your Google AI Studio API key..."
-                className="w-full py-[10px] pl-3.5 pr-12 text-[0.9rem] border border-border rounded-md outline-none font-mono transition-all duration-150 focus:border-primary focus:ring-[3px] focus:ring-focusring"
+                className="w-full py-[10px] pl-3.5 pr-12 text-[0.9rem] text-text-primary bg-app-card border border-border rounded-md outline-none font-mono transition-all duration-150 focus:border-primary focus:ring-[3px] focus:ring-focusring"
               />
               <button
                 onClick={toggleApiKeyVisibility}
@@ -108,7 +108,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
             <select
               value={selectedModel}
               onChange={(e) => handleModelChange(e.target.value)}
-              className="py-[10px] px-3.5 text-[0.9rem] border border-border rounded-md outline-none bg-app-card cursor-pointer transition-all duration-150 focus:border-primary focus:ring-[3px] focus:ring-focusring font-sans"
+              className="py-[10px] px-3.5 text-[0.9rem] text-text-primary border border-border rounded-md outline-none bg-app-card cursor-pointer transition-all duration-150 focus:border-primary focus:ring-[3px] focus:ring-focusring font-sans"
             >
               {GEMINI_MODELS.map((m) => (
                 <option key={m.id} value={m.id}>
@@ -130,7 +130,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
                 value={customModel}
                 onChange={(e) => setCustomModel(e.target.value)}
                 placeholder="e.g. gemini-3.5-flash-medium"
-                className="py-[10px] px-3.5 text-[0.9rem] border border-border rounded-md outline-none font-mono transition-all duration-150 focus:border-primary focus:ring-[3px] focus:ring-focusring"
+                className="py-[10px] px-3.5 text-[0.9rem] text-text-primary bg-app-card border border-border rounded-md outline-none font-mono transition-all duration-150 focus:border-primary focus:ring-[3px] focus:ring-focusring"
               />
             </div>
           )}

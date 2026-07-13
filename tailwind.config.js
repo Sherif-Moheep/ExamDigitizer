@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: 'class',
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -12,29 +13,29 @@ export default {
       },
       colors: {
         app: {
-          bg: '#f1f5f9',
-          card: '#ffffff',
-          hover: '#f8fafc',
+          bg: 'var(--color-app-bg)',
+          card: 'var(--color-app-card)',
+          hover: 'var(--color-app-hover)',
         },
         text: {
-          primary: '#0f172a',
-          secondary: '#475569',
-          muted: '#94a3b8',
+          primary: 'var(--color-text-primary)',
+          secondary: 'var(--color-text-secondary)',
+          muted: 'var(--color-text-muted)',
         },
         primary: {
-          DEFAULT: '#4f46e5',
-          hover: '#4338ca',
-          light: '#e0e7ff',
+          DEFAULT: 'var(--color-primary)',
+          hover: 'var(--color-primary-hover)',
+          light: 'var(--color-primary-light)',
         },
         danger: {
-          DEFAULT: '#ef4444',
-          hover: '#dc2626',
-          light: '#fee2e2',
+          DEFAULT: 'var(--color-danger)',
+          hover: 'var(--color-danger-hover)',
+          light: 'var(--color-danger-light)',
         },
         border: {
-          DEFAULT: '#e2e8f0',
+          DEFAULT: 'var(--color-border)',
         },
-        focusring: 'rgba(79, 70, 229, 0.2)',
+        focusring: 'var(--focusring)',
       },
       borderRadius: {
         sm: '6px',

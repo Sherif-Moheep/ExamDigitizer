@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { DependencyProvider } from './di/DiContext';
+import { DependencyProvider, useDependencies } from './di/DiContext';
 import { CompileExamUseCase } from '../domain/usecases/CompileExamUseCase';
 import { DigitizeExamUseCase } from '../domain/usecases/DigitizeExamUseCase';
 import { MarkdownParserImpl } from '../data/services/MarkdownParserImpl.ts';
@@ -14,10 +14,27 @@ import { SettingsModal } from './components/SettingsModal';
 import { ProcessingOverlay } from './components/ProcessingOverlay';
 
 const DigitizerApp: React.FC = () => {
+  const { settingsRepository } = useDependencies();
   const [view, setView] = useState<'upload' | 'editor'>('upload');
   const [digitizedMarkdown, setDigitizedMarkdown] = useState('');
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [fileName, setFileName] = useState<string | null>(null);
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => settingsRepository.getTheme());
+
+  // Apply theme class to document element
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [theme]);
+
+  const handleToggleTheme = () => {
+    const nextTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(nextTheme);
+    settingsRepository.saveTheme(nextTheme);
+  };
 
   // Sync document title matching original logic
   useEffect(() => {
@@ -68,6 +85,8 @@ const DigitizerApp: React.FC = () => {
         view={view}
         onNewExam={handleNewExam}
         onOpenSettings={() => setSettingsOpen(true)}
+        theme={theme}
+        onToggleTheme={handleToggleTheme}
       />
 
       {view === 'upload' ? (

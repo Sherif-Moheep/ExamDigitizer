@@ -4,9 +4,17 @@ interface HeaderProps {
   view: 'upload' | 'editor';
   onNewExam: () => void;
   onOpenSettings: () => void;
+  theme: 'light' | 'dark';
+  onToggleTheme: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ view, onNewExam, onOpenSettings }) => {
+export const Header: React.FC<HeaderProps> = ({
+  view,
+  onNewExam,
+  onOpenSettings,
+  theme,
+  onToggleTheme,
+}) => {
   return (
     <header className="bg-app-card border-b border-border py-3 px-6 flex items-center justify-between h-16 z-10 shadow-sm print:hidden">
       <div className="flex items-center gap-3">
@@ -77,6 +85,50 @@ export const Header: React.FC<HeaderProps> = ({ view, onNewExam, onOpenSettings 
             New Exam
           </button>
         )}
+
+        <button
+          onClick={onToggleTheme}
+          className="inline-flex items-center justify-center p-[10px] bg-app-card text-text-secondary border border-border rounded-md cursor-pointer transition-all duration-200 hover:bg-app-hover hover:text-text-primary hover:border-text-muted shadow-sm"
+          title={theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
+        >
+          {theme === 'light' ? (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+            </svg>
+          ) : (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <circle cx="12" cy="12" r="4"></circle>
+              <path d="M12 2v2"></path>
+              <path d="M12 20v2"></path>
+              <path d="M4.93 4.93l1.41 1.41"></path>
+              <path d="M17.66 17.66l1.41 1.41"></path>
+              <path d="M2 12h2"></path>
+              <path d="M20 12h2"></path>
+              <path d="M6.34 17.66l-1.41 1.41"></path>
+              <path d="M19.07 4.93l-1.41 1.41"></path>
+            </svg>
+          )}
+        </button>
 
         <button
           onClick={onOpenSettings}

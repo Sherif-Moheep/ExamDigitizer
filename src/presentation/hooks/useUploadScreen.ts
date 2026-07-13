@@ -62,7 +62,7 @@ export function useUploadScreen({ onSuccess, onOpenSettings }: UseUploadScreenPr
     try {
       const base64Data = await fileToBase64(selectedFile);
 
-      setProcessingStatus('Analyzing exam content with Gemini...');
+      setProcessingStatus('Analyzing exam content and layout...');
       const result = await digitizeExamUseCase.execute(
         base64Data,
         apiKey,

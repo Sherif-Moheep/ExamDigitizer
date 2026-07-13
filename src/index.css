@@ -5,6 +5,48 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  /* Light Mode Colors */
+  --color-app-bg: #f1f5f9;
+  --color-app-card: #ffffff;
+  --color-app-hover: #f8fafc;
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #475569;
+  --color-text-muted: #94a3b8;
+  --color-border: #e2e8f0;
+  
+  --color-primary: #4f46e5;
+  --color-primary-hover: #4338ca;
+  --color-primary-light: #e0e7ff;
+  
+  --color-danger: #ef4444;
+  --color-danger-hover: #dc2626;
+  --color-danger-light: #fee2e2;
+  
+  --focusring: rgba(79, 70, 229, 0.2);
+}
+
+.dark {
+  /* Dark Mode Colors (Sleek Slate/Indigo Palette) */
+  --color-app-bg: #090d16;        /* Deep space dark blue */
+  --color-app-card: #151b26;      /* Slate card background */
+  --color-app-hover: #1e2635;     /* Dark hover background */
+  --color-text-primary: #f8fafc;  /* Ice white primary text */
+  --color-text-secondary: #94a3b8;/* Slate grey secondary text */
+  --color-text-muted: #64748b;    /* Muted text */
+  --color-border: #222c3f;        /* Deep slate border */
+  
+  --color-primary: #6366f1;       /* Indigo adapted for dark backgrounds */
+  --color-primary-hover: #4f46e5;
+  --color-primary-light: #1e1b4b; /* Dark purple/indigo */
+  
+  --color-danger: #f87171;        /* Red adapted for dark backgrounds */
+  --color-danger-hover: #ef4444;
+  --color-danger-light: #451a1a;
+  
+  --focusring: rgba(99, 102, 241, 0.35);
+}
+
 /* Custom Scrollbars */
 textarea::-webkit-scrollbar,
 .pdf-wrapper::-webkit-scrollbar,
