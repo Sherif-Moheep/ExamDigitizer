@@ -1,0 +1,284 @@
+@import 'katex/dist/katex.min.css';
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Light Mode Colors */
+  --color-app-bg: #f1f5f9;
+  --color-app-card: #ffffff;
+  --color-app-hover: #f8fafc;
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #475569;
+  --color-text-muted: #94a3b8;
+  --color-border: #e2e8f0;
+  
+  --color-primary: #4f46e5;
+  --color-primary-hover: #4338ca;
+  --color-primary-light: #e0e7ff;
+  
+  --color-danger: #ef4444;
+  --color-danger-hover: #dc2626;
+  --color-danger-light: #fee2e2;
+  
+  --focusring: rgba(79, 70, 229, 0.2);
+}
+
+.dark {
+  /* Dark Mode Colors (Sleek Slate/Indigo Palette) */
+  --color-app-bg: #090d16;        /* Deep space dark blue */
+  --color-app-card: #151b26;      /* Slate card background */
+  --color-app-hover: #1e2635;     /* Dark hover background */
+  --color-text-primary: #f8fafc;  /* Ice white primary text */
+  --color-text-secondary: #94a3b8;/* Slate grey secondary text */
+  --color-text-muted: #64748b;    /* Muted text */
+  --color-border: #222c3f;        /* Deep slate border */
+  
+  --color-primary: #6366f1;       /* Indigo adapted for dark backgrounds */
+  --color-primary-hover: #4f46e5;
+  --color-primary-light: #1e1b4b; /* Dark purple/indigo */
+  
+  --color-danger: #f87171;        /* Red adapted for dark backgrounds */
+  --color-danger-hover: #ef4444;
+  --color-danger-light: #451a1a;
+  
+  --focusring: rgba(99, 102, 241, 0.35);
+}
+
+/* Custom Scrollbars */
+textarea::-webkit-scrollbar,
+.pdf-wrapper::-webkit-scrollbar,
+.modal-body::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+textarea::-webkit-scrollbar-track,
+.pdf-wrapper::-webkit-scrollbar-track,
+.modal-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+textarea::-webkit-scrollbar-thumb,
+.pdf-wrapper::-webkit-scrollbar-thumb,
+.modal-body::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+textarea::-webkit-scrollbar-thumb:hover,
+.pdf-wrapper::-webkit-scrollbar-thumb:hover,
+.modal-body::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* --- MARKDOWN TYPOGRAPHY (PDF CONTAINER) --- */
+#pdf-container h1,
+#pdf-container h2,
+#pdf-container h3,
+#pdf-container h4 {
+  margin-top: 1.2em;
+  margin-bottom: 0.6em;
+  line-height: 1.25;
+  color: #0f172a; /* text-primary */
+}
+
+#pdf-container h1 {
+  font-size: 1.85rem;
+  text-align: left;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-top: 0;
+  margin-bottom: 14px;
+}
+
+#pdf-container h2 {
+  font-size: 1.45rem;
+  font-weight: 700;
+  margin-top: 1.2em;
+  margin-bottom: 0.6em;
+}
+
+#pdf-container h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-top: 1.8em;
+  margin-bottom: 0.6em;
+  page-break-after: avoid;
+  break-after: avoid;
+}
+
+#pdf-container h4 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-top: 1.4em;
+  margin-bottom: 0.5em;
+  page-break-after: avoid;
+  break-after: avoid;
+}
+
+#pdf-container p,
+#pdf-container ul,
+#pdf-container ol {
+  margin-bottom: 1.15em;
+}
+
+#pdf-container ul,
+#pdf-container ol {
+  padding-left: 1.8em;
+}
+
+#pdf-container ul {
+  list-style-type: disc;
+}
+
+#pdf-container ol {
+  list-style-type: decimal;
+}
+
+#pdf-container li {
+  margin-bottom: 0.45em;
+}
+
+/* Custom question block styling */
+.question-paragraph {
+  font-size: 1.025rem;
+  margin-top: 1.8em;
+  margin-bottom: 1.2em;
+  line-height: 1.7;
+}
+
+
+
+
+
+/* Rendered Figures notes & ASCII styling */
+.figure-note-container {
+  margin: 20px 0;
+  padding: 16px;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-left: 4px solid #4f46e5; /* primary */
+  border-radius: 10px; /* radius-md */
+  font-size: 0.85rem;
+  color: #475569; /* text-secondary */
+}
+
+#pdf-container pre,
+.figure-ascii-diagram {
+  font-family: 'Fira Code', monospace;
+  white-space: pre;
+  background-color: #f1f5f9;
+  padding: 14px;
+  border-radius: 6px; /* radius-sm */
+  border: 1px solid #e2e8f0;
+  margin-top: 10px;
+  overflow-x: auto;
+  line-height: 1.35;
+  font-size: 13px;
+  color: #0f172a;
+}
+
+#pdf-container pre.mermaid {
+  background: transparent;
+  border: none;
+  padding: 0;
+  overflow: visible;
+  margin: 16px 0;
+}
+
+#pdf-container pre.mermaid svg {
+  max-width: 100% !important;
+  max-height: 320px !important;
+  width: auto !important;
+  height: auto !important;
+  display: block;
+  margin: 0 auto;
+}
+
+/* --- THE PHYSICAL WRITING LINES --- */
+.solve-space-container {
+  margin-top: 20px;
+  margin-bottom: 35px;
+  border-left: 3px solid #cbd5e1;
+  padding-left: 14px;
+  break-inside: auto;
+}
+
+.writing-line {
+  height: 32px;
+  border-bottom: 1px solid #e2e8f0;
+  width: 100%;
+}
+
+p, ul, ol, .katex-display {
+  break-inside: auto;
+}
+
+.katex-display {
+  margin: 18px 0 !important;
+}
+
+hr {
+  margin: 32px 0;
+  border: 0;
+  border-top: 2px solid #e2e8f0;
+}
+
+/* --- TABLES --- */
+#pdf-container table {
+  width: fit-content;
+  max-width: 100%;
+  border-collapse: collapse;
+  margin: 20px auto;
+  font-size: 0.95rem;
+  break-inside: avoid;
+}
+
+#pdf-container th,
+#pdf-container td {
+  padding: 10px 12px;
+  border: 1px solid #cbd5e1;
+  text-align: left;
+}
+
+#pdf-container th {
+  background-color: #f1f5f9;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+#pdf-container tr:nth-child(even) {
+  background-color: #f8fafc;
+}
+
+/* --- PRINT UI STYLE SYSTEM --- */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 12mm;
+  }
+
+  html,
+  body {
+    background: white !important;
+    height: auto;
+    overflow: visible;
+  }
+
+  body {
+    display: block;
+    padding: 0;
+  }
+
+  .writing-line {
+    border-bottom: 1px solid #bdf !important;
+  }
+
+  #pdf-container pre.mermaid svg {
+    max-height: 75mm !important;
+    break-inside: avoid;
+  }
+}
