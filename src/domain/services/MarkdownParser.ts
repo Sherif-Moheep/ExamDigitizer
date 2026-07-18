@@ -1,3 +1,5 @@
 export interface MarkdownParser {
-  parse(input: string): string;
+  parse(
+    input: string
+  ): string;
 }

@@ -17,6 +17,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
     showApiKey,
     toggleApiKeyVisibility,
     showCustomInput,
+    showApiGuide,
+    toggleApiGuide,
     saveSettings,
   } = useSettingsModal(isOpen, onClose);
 
@@ -86,18 +88,52 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
                 )}
               </button>
             </div>
-            <p className="text-[0.75rem] text-text-muted">
-              Get your API key for free from{' '}
-              <a
-                href="https://aistudio.google.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary no-underline hover:underline"
+            <div className="flex justify-between items-center text-[0.75rem]">
+              <span className="text-text-muted">
+                Get your API key for free from{' '}
+                <a
+                  href="https://aistudio.google.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary no-underline hover:underline font-semibold"
+                >
+                  Google AI Studio
+                </a>
+                .
+              </span>
+              <button
+                type="button"
+                onClick={toggleApiGuide}
+                className="bg-transparent border-none text-primary cursor-pointer hover:underline font-semibold p-0"
               >
-                Google AI Studio
-              </a>
-              .
-            </p>
+                {showApiGuide ? 'Hide Guide' : 'How to get a key?'}
+              </button>
+            </div>
+
+            {showApiGuide && (
+              <div className="mt-2 p-3.5 bg-app-bg border border-border rounded-md text-[0.8rem] text-text-secondary flex flex-col gap-2 transition-all duration-200">
+                <p className="font-bold text-text-primary border-b border-border pb-1">
+                  How to get your API Key:
+                </p>
+                <ol className="list-decimal pl-5 flex flex-col gap-1.5 text-text-muted">
+                  <li>
+                    Go to{' '}
+                    <a
+                      href="https://aistudio.google.com/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary no-underline hover:underline font-semibold"
+                    >
+                      Google AI Studio
+                    </a>.
+                  </li>
+                  <li>Sign in with your Google account.</li>
+                  <li>Click on <strong className="text-text-secondary">Get API key</strong> in the left sidebar menu.</li>
+                  <li>Click the <strong className="text-text-secondary">Create API key</strong> button.</li>
+                  <li>Select/create a project, copy your generated key, and paste it into the field above.</li>
+                </ol>
+              </div>
+            )}
           </div>
 
           {/* Model Preset Group */}
