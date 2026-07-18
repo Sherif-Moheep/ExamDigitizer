@@ -1,13 +1,20 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { useDependencies } from '../di/DiContext';
+import { PdfPage } from '../../domain/models/PdfPage';
+import { PdfService } from '../../domain/services/PdfService';
 
 interface UseUploadScreenProps {
-  onSuccess: (markdownResult: string, file: File) => void;
+  onSuccess: (
+    markdownResult: string,
+    file: File,
+    pageImages: PdfPage[],
+    autoFigures: Record<string, string>
+  ) => void;
   onOpenSettings: () => void;
 }
 
 export function useUploadScreen({ onSuccess, onOpenSettings }: UseUploadScreenProps) {
-  const { digitizeExamUseCase, settingsRepository } = useDependencies();
+  const { digitizeExamUseCase, settingsRepository, pdfService } = useDependencies();
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -23,7 +30,6 @@ export function useUploadScreen({ onSuccess, onOpenSettings }: UseUploadScreenPr
       return;
     }
 
-    // 20MB limit
     if (file.size > 20 * 1024 * 1024) {
       setError('File is too large. Maximum size is 20MB.');
       return;
@@ -62,6 +68,11 @@ export function useUploadScreen({ onSuccess, onOpenSettings }: UseUploadScreenPr
     try {
       const base64Data = await fileToBase64(selectedFile);
 
+      setProcessingStatus('Rendering PDF pages...');
+      const pages = await pdfService.renderPdfPages(base64Data);
+
+      if (abortControllerRef.current.signal.aborted) return;
+
       setProcessingStatus('Analyzing exam content and layout...');
       const result = await digitizeExamUseCase.execute(
         base64Data,
@@ -70,8 +81,13 @@ export function useUploadScreen({ onSuccess, onOpenSettings }: UseUploadScreenPr
         abortControllerRef.current.signal
       );
 
+      if (abortControllerRef.current.signal.aborted) return;
+
+      setProcessingStatus('Extracting figures...');
+      const autoFigures = await autoExtractFigures(result, pages, pdfService);
+
       setIsProcessing(false);
-      onSuccess(result, selectedFile);
+      onSuccess(result, selectedFile, pages, autoFigures);
     } catch (err: any) {
       if (err.name === 'AbortError') {
         console.log('Processing aborted.');
@@ -83,6 +99,67 @@ export function useUploadScreen({ onSuccess, onOpenSettings }: UseUploadScreenPr
     } finally {
       abortControllerRef.current = null;
     }
+  };
+
+  const autoExtractFigures = async (
+    markdownText: string,
+    pages: PdfPage[],
+    pdfServiceInstance: PdfService
+  ): Promise<Record<string, string>> => {
+    const figureRegex = /\[FIGURE:[^\]]+\]/gi;
+    const matches = markdownText.match(figureRegex) || [];
+    const newFigures: Record<string, string> = {};
+
+    for (const match of matches) {
+      const parsed = parseFigureMarker(match);
+      if (!parsed) continue;
+
+      const figureKey = `fig-${parsed.pageNum}-${parsed.description.slice(0, 20).replace(/\s/g, '_')}`;
+      const page = pages.find((p) => p.pageNum === parsed.pageNum);
+
+      if (page && parsed.coords) {
+        try {
+          const cropped = await pdfServiceInstance.cropFigureFromPage(
+            page.base64,
+            page.width,
+            page.height,
+            parsed.coords
+          );
+          newFigures[figureKey] = cropped;
+        } catch (err) {
+          console.warn(`Failed to crop figure ${figureKey}:`, err);
+        }
+      }
+    }
+
+    return newFigures;
+  };
+
+  const parseFigureMarker = (markerText: string) => {
+    const match = markerText.match(
+      /\[FIGURE:(\d+):(\d+),(\d+),(\d+),(\d+):([^\]]+)\]/i
+    );
+    if (!match) {
+      const simpleMatch = markerText.match(/\[FIGURE:(\d+):([^\]]+)\]/i);
+      if (simpleMatch) {
+        return {
+          pageNum: parseInt(simpleMatch[1], 10),
+          coords: null,
+          description: simpleMatch[2].trim(),
+        };
+      }
+      return null;
+    }
+    return {
+      pageNum: parseInt(match[1], 10),
+      coords: {
+        y1: parseInt(match[2], 10),
+        x1: parseInt(match[3], 10),
+        y2: parseInt(match[4], 10),
+        x2: parseInt(match[5], 10),
+      },
+      description: match[6].trim(),
+    };
   };
 
   const cancelProcessing = () => {
@@ -117,22 +194,15 @@ export function useUploadScreen({ onSuccess, onOpenSettings }: UseUploadScreenPr
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragOver(false);
-    const file = e.dataTransfer.files[0];
-    if (file) handleFileSelection(file);
+    const file = e.dataTransfer.files?.[0];
+    if (file) {
+      handleFileSelection(file);
+    }
   };
-
-  useEffect(() => {
-    return () => {
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-      }
-    };
-  }, []);
 
   return {
     selectedFile,
     error,
-    setError,
     isProcessing,
     processingStatus,
     isDragOver,

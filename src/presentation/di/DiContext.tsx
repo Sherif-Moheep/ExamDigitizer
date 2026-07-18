@@ -2,11 +2,13 @@ import React, { createContext, useContext } from 'react';
 import { CompileExamUseCase } from '../../domain/usecases/CompileExamUseCase';
 import { DigitizeExamUseCase } from '../../domain/usecases/DigitizeExamUseCase';
 import { SettingsRepository } from '../../domain/repositories/SettingsRepository';
+import { PdfService } from '../../domain/services/PdfService';
 
 export interface Dependencies {
   compileExamUseCase: CompileExamUseCase;
   digitizeExamUseCase: DigitizeExamUseCase;
   settingsRepository: SettingsRepository;
+  pdfService: PdfService;
 }
 
 const DependencyContext = createContext<Dependencies | null>(null);
