@@ -218,7 +218,6 @@ hr {
   border-collapse: collapse;
   margin: 20px auto;
   font-size: 0.95rem;
-  break-inside: avoid;
 }
 
 #pdf-container th,
@@ -226,6 +225,10 @@ hr {
   padding: 10px 12px;
   border: 1px solid #cbd5e1;
   text-align: left;
+}
+
+#pdf-container tr {
+  break-inside: avoid;
 }
 
 #pdf-container th {
@@ -277,9 +280,16 @@ hr {
     overflow: visible;
   }
 
-  body {
-    display: block;
-    padding: 0;
+  /* Force preview sheet background to white and clear its styling constraints */
+  #pdf-container {
+    background: white !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
   }
 
   .writing-line {
