@@ -238,6 +238,31 @@ hr {
   background-color: #f8fafc;
 }
 
+/* --- MANUAL PAGE BREAK DIVIDER --- */
+.page-break {
+  border-top: 2px dashed var(--color-primary-light);
+  margin: 28px 0;
+  position: relative;
+  height: 0;
+  display: block;
+}
+.page-break::after {
+  content: "Page Break";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--color-app-card);
+  padding: 2px 12px;
+  font-size: 0.75rem;
+  color: var(--color-primary);
+  font-weight: 700;
+  border: 1px solid var(--color-primary-light);
+  border-radius: 6px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
 /* --- PRINT UI STYLE SYSTEM --- */
 @media print {
   @page {
@@ -261,9 +286,24 @@ hr {
     border-bottom: 1px solid #bdf !important;
   }
 
+  .page-break {
+    border-top: none;
+    margin: 0;
+    break-before: page;
+    page-break-before: always;
+    height: 0;
+  }
+  .page-break::after {
+    display: none;
+  }
 
   .figure-embed .figure-actions { display: none !important; }
   .figure-embed { border: none; background: transparent; }
+  .figure-embed .figure-image {
+    max-height: 55mm !important;
+    object-fit: contain;
+    width: auto !important;
+  }
   .figure-embed .figure-caption { background: transparent; border-top: none; }
   .pdf-thumbnails { display: none !important; }
   .thumbnail-lightbox { display: none !important; }

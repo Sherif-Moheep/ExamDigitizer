@@ -11,7 +11,7 @@ Formatting Rules:
    - Format all metadata details (Course, Code, Lecturer, Date, Marks, Time, etc.) as standard Markdown bullet list items: * **Key:** Value (e.g., * **Course:** Differential Equations).
    - Place a horizontal divider line ('---') on a new line immediately below the metadata list.
    - Do NOT omit, modify, or summarize any of this information. Place this metadata section at the absolute beginning of the file, before any other content.
-2. Question Formatting: Format all major questions as standard numbered paragraphs (e.g., 1. The relation y(x)... is a solution of...). Do NOT format questions as headings.
+2. Question Formatting: Format all major questions as standard numbered paragraphs. Wrap the question number/label prefix in bold formatting exactly as it appears on the exam (e.g., **1.** The relation..., **Question 1:** The relation..., **Problem (1)** The relation..., **I.** The relation...). Do NOT format questions as headings.
    - Format multiple-choice options as standard Markdown bullet lists (e.g., * (a) Option A).
    - Use '##' or '###' for major exam sections or parts (e.g., ## Part I: Choose the Correct Answer (36 Marks)).
 3. Math Formatting: Convert all mathematical expressions, variables, equations, and formulas into LaTeX format using single dollar signs ($...$) for inline math and double dollar signs ($$...$$) for block equations.

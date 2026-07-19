@@ -44,6 +44,15 @@ export class CompileExamUseCase {
       (_, count) => this.generateLines(parseInt(count, 10))
     );
 
+    // 3.5 Inject manual page breaks
+    parsedHtml = parsedHtml.replace(
+      /(?:<p>)?\[PAGE_BREAK\](?:<\/p>)?/gi,
+      '<div class="page-break"></div>'
+    ).replace(
+      /(?:<p>)?\\pagebreak(?:<\/p>)?/gi,
+      '<div class="page-break"></div>'
+    );
+
     // 4. Replace [FIGURE:...] markers with images
     parsedHtml = parsedHtml.replace(
       /(?:<p>)?\[FIGURE:[^\]]+\](?:<\/p>)?/g,
@@ -85,7 +94,7 @@ export class CompileExamUseCase {
         const firstChild = p.firstElementChild;
         if (firstChild && firstChild.tagName === 'STRONG') {
           const text = firstChild.textContent?.trim() || '';
-          if (/^(Question|Q|Prob|Problem)\s*\d+/i.test(text)) {
+          if (/^(\()?((Question|Q|Prob|Problem|Part)\s*)?([IVXLCDM\d]+|[A-Z])(\))?[\.\)\-:]?$/i.test(text)) {
             p.classList.add('question-paragraph');
           }
         }
