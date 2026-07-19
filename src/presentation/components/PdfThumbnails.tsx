@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { PdfPage } from '../../domain/models/PdfPage';
+import { ChevronLeftIcon, ChevronRightIcon } from './Icons';
 
 interface PdfThumbnailsProps {
   pageImages: PdfPage[];
@@ -17,11 +18,11 @@ export const PdfThumbnails: React.FC<PdfThumbnailsProps> = ({
   if (collapsed) {
     return (
       <button
-        className="thumbnails-expand-btn no-print"
+        className="thumbnails-expand-btn no-print flex items-center justify-center"
         onClick={onToggleCollapse}
         title="Show original pages"
       >
-        ▶
+        <ChevronRightIcon />
       </button>
     );
   }
@@ -32,11 +33,11 @@ export const PdfThumbnails: React.FC<PdfThumbnailsProps> = ({
         <div className="thumbnails-header">
           <span className="thumbnails-title">Original Pages</span>
           <button
-            className="thumbnails-collapse-btn"
+            className="thumbnails-collapse-btn flex items-center justify-center"
             onClick={onToggleCollapse}
             title="Hide thumbnails"
           >
-            ◀
+            <ChevronLeftIcon />
           </button>
         </div>
         <div className="thumbnails-list">

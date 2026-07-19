@@ -1,5 +1,6 @@
 import { MarkdownParser } from '../services/MarkdownParser';
 import { PdfPage } from '../models/PdfPage';
+import { SVG_IMAGE_ICON, SVG_SCISSOR_ICON } from '../utils/iconStrings';
 
 export interface ParsedFigure {
   pageNum: number;
@@ -26,7 +27,8 @@ export class CompileExamUseCase {
       /<blockquote>\s*<p>\s*<strong>\[FIGURE REFERENCE\]<\/strong>:([\s\S]*?)<\/p>\s*<\/blockquote>/gi,
       (_, content) => {
         return `<div class="figure-note-container">
-          <strong>🖼️ Figure Reference</strong>: ${content}
+          ${SVG_IMAGE_ICON}
+          <strong>Figure Reference</strong>: ${content}
         </div>`;
       }
     );
@@ -63,9 +65,11 @@ export class CompileExamUseCase {
         return `<div class="figure-embed" data-figure-key="${figureKey}" data-page="${parsed.pageNum}">
           <img src="${displaySrc}" alt="${parsed.description}" class="figure-image" />
           <div class="figure-actions no-print">
-            <button class="crop-btn" data-figure-key="${figureKey}" data-page="${parsed.pageNum}" title="Crop this figure">✂️ Crop</button>
+            <button class="crop-btn" data-figure-key="${figureKey}" data-page="${parsed.pageNum}" title="Crop this figure">
+              ${SVG_SCISSOR_ICON}
+              Crop
+            </button>
           </div>
-          <p class="figure-caption">${parsed.description}</p>
         </div>`;
       }
     );

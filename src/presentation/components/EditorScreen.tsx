@@ -26,7 +26,7 @@ export const EditorScreen: React.FC<EditorScreenProps> = ({
   onSolveLinesChange,
   onUpdateFigureImage,
 }) => {
-  const [thumbnailsCollapsed, setThumbnailsCollapsed] = useState(false);
+  const [thumbnailsCollapsed, setThumbnailsCollapsed] = useState(true);
   const [cropTarget, setCropTarget] = useState<{ figureKey: string; pageNum: number } | null>(
     null
   );

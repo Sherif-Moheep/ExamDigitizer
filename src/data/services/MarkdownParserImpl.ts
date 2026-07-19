@@ -10,15 +10,6 @@ export class MarkdownParserImpl implements MarkdownParser {
   constructor() {
     this.md = markdownIt({ html: true, breaks: true })
       .use(texmath, { engine: katex, delimiters: 'dollars' });
-
-    const defaultFence = this.md.renderer.rules.fence;
-    this.md.renderer.rules.fence = (tokens, idx, options, env, self) => {
-      const token = tokens[idx];
-      if (token.info.trim() === 'mermaid') {
-        return `<pre class="mermaid">${token.content}</pre>\n`;
-      }
-      return defaultFence ? defaultFence(tokens, idx, options, env, self) : '';
-    };
   }
 
   parse(input: string): string {

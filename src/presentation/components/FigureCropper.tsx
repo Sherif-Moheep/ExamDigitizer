@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { ScissorIcon } from './Icons';
 
 interface FigureCropperProps {
   pageImage: string;
@@ -148,7 +149,10 @@ export const FigureCropper: React.FC<FigureCropperProps> = ({
     >
       <div className="cropper-modal">
         <div className="cropper-header">
-          <span className="cropper-title">✂️ Crop Figure</span>
+          <span className="cropper-title flex items-center gap-2">
+            <ScissorIcon className="text-primary flex items-center" />
+            Crop Figure
+          </span>
           <span className="cropper-instructions">
             Click and drag to select the figure region
           </span>
