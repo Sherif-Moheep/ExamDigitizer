@@ -11,7 +11,7 @@ Formatting Rules:
    - Format all metadata details (Course, Code, Lecturer, Date, Marks, Time, etc.) as standard Markdown bullet list items: * **Key:** Value (e.g., * **Course:** Differential Equations).
    - Place a horizontal divider line ('---') on a new line immediately below the metadata list.
    - Do NOT omit, modify, or summarize any of this information. Place this metadata section at the absolute beginning of the file, before any other content.
-2. Question Formatting: Format all major questions as standard numbered paragraphs (e.g., 1. The relation y(x)... is a solution of...). Do NOT format questions as headings.
+2. Question Formatting: Format all major questions as standard numbered paragraphs. Wrap the question number/label prefix in bold formatting exactly as it appears on the exam (e.g., **1.** The relation..., **Question 1:** The relation..., **Problem (1)** The relation..., **I.** The relation...). Do NOT format questions as headings.
    - Format multiple-choice options as standard Markdown bullet lists (e.g., * (a) Option A).
    - Use '##' or '###' for major exam sections or parts (e.g., ## Part I: Choose the Correct Answer (36 Marks)).
 3. Math Formatting: Convert all mathematical expressions, variables, equations, and formulas into LaTeX format using single dollar signs ($...$) for inline math and double dollar signs ($$...$$) for block equations.
@@ -21,10 +21,16 @@ Formatting Rules:
 5. Lists: Format multiple-choice options as standard Markdown bullet lists (e.g., * (a) Option A).
    - Convert any True or False style questions to have two separate bulleted choices: * (a) True and * (b) False, rather than writing the words 'True' and 'False' or '(True/False)' in the question description line.
 6. Placeholders: Insert the exact text [SOLVE_SPACE_HERE] on a new line, ensuring there is a blank line before it (separated by an empty line from the question text), immediately following the end of every question and sub-question (both multiple-choice and long-answer).
-7. Figures & Diagrams: For any figure, diagram, graph, image, circuit, drawing, UML diagram, tree, flowchart, or visual element:
-   - You MUST ALWAYS provide a prominent figure reference note blockquote at its position:
-     > **[FIGURE REFERENCE]**: A relevant diagram (description: [insert short description of the figure]) is located on PDF Page P. Please refer to page P of the original PDF to view it.
-   - Additionally, you MUST make your best effort to construct a Mermaid.js diagram (enclosed in standard markdown \`\`\`mermaid ... \`\`\` code blocks) directly next to/below the reference note for any structured, relationship-based, or hierarchical graphic (such as flowcharts, trees, sequence diagrams, class structures, database schemas, timelines, or charts). Only omit the Mermaid code if the graphic is a photographic image, organic illustration, or high-detail mathematical plot.
+7. Figures & Diagrams: For ANY figure, diagram, graph, image, circuit, drawing, or visual element that is RELEVANT to a question:
+   - Write [FIGURE:P:Y1,X1,Y2,X2:description] on its own line where:
+     - P = the PDF page number (1-indexed)
+     - Y1,X1 = top-left corner coordinates (0-1000 normalized scale)
+     - Y2,X2 = bottom-right corner coordinates (0-1000 normalized scale)
+     - description = brief description of the figure
+   - Place this marker exactly where the figure appears relative to the question
+   - Example: [FIGURE:2:120,50,450,800:Right triangle with hypotenuse c and legs a=3, b=4]
+   - ONLY include figures relevant to answering questions (diagrams, circuits, graphs, geometric shapes, charts)
+   - IGNORE decorative elements: university logos, headers, footers, watermarks, stamps, signatures, page borders. Do NOT use Mermaid.js code blocks.
 8. Preserve Structure: Keep the original question numbering, sub-questions, instructions, and sections. Use --- (horizontal rules) between major exam sections.
 10. Table Formatting: For any table, matrix (non-mathematical), grid, or tabular data:
     - You MUST ALWAYS format it as a standard Markdown table using pipes and hyphens (e.g., \`| Header 1 | Header 2 |\` followed by \`|---|---|\` and the row data).
