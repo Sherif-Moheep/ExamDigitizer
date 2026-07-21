@@ -27,8 +27,8 @@ export class SettingsRepositoryImpl implements SettingsRepository {
     if (saved === 'light' || saved === 'dark') {
       return saved;
     }
-    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    return prefersDark ? 'dark' : 'light';
+
+    return 'light';
   }
 
   saveTheme(theme: 'light' | 'dark'): void {

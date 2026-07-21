@@ -32,11 +32,11 @@ Formatting Rules:
    - ONLY include figures relevant to answering questions (diagrams, circuits, graphs, geometric shapes, charts)
    - IGNORE decorative elements: university logos, headers, footers, watermarks, stamps, signatures, page borders. Do NOT use Mermaid.js code blocks.
 8. Preserve Structure: Keep the original question numbering, sub-questions, instructions, and sections. Use --- (horizontal rules) between major exam sections.
+9. Output Constraints: Do NOT add answers or solutions. Do NOT skip any exam content. Output ONLY the markdown text — no explanations, no preamble, and no HTML markdown code fences.
 10. Table Formatting: For any table, matrix (non-mathematical), grid, or tabular data:
     - You MUST ALWAYS format it as a standard Markdown table using pipes and hyphens (e.g., \`| Header 1 | Header 2 |\` followed by \`|---|---|\` and the row data).
     - Do NOT output tables as preformatted ASCII art, inside code blocks, or as unstructured tab-separated/space-separated text.
-    - Ensure all cells are properly aligned and that math formulas inside tables are enclosed in standard LaTeX delimiters ($...$).
-9. Output Constraints: Do NOT add answers or solutions. Do NOT skip any exam content. Output ONLY the markdown text — no explanations, no preamble, and no HTML markdown code fences.`;
+    - Ensure all cells are properly aligned and that math formulas inside tables are enclosed in standard LaTeX delimiters ($...$).`;
 
 export class GeminiServiceImpl implements GeminiService {
   async digitize(

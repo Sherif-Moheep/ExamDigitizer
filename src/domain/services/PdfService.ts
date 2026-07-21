@@ -1,7 +1,10 @@
 import { PdfPage, FigureCoords } from '../models/PdfPage';
 
 export interface PdfService {
-  renderPdfPages(pdfBase64: string): Promise<PdfPage[]>;
+  renderPdfPages(
+    pdfBase64: string
+  ): Promise<PdfPage[]>;
+  
   cropFigureFromPage(
     pageBase64: string,
     pageWidth: number,
