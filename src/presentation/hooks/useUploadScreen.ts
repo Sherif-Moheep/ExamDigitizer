@@ -101,6 +101,16 @@ export function useUploadScreen({ onSuccess, onOpenSettings }: UseUploadScreenPr
     }
   };
 
+  const buildFigureKey = (
+    parsed: { pageNum: number; coords: { y1: number; x1: number; y2: number; x2: number } | null; description: string },
+    index: number
+  ): string => {
+    if (parsed.coords) {
+      return `fig-${parsed.pageNum}-${parsed.coords.y1}_${parsed.coords.x1}_${parsed.coords.y2}_${parsed.coords.x2}`;
+    }
+    return `fig-${parsed.pageNum}-idx${index}`;
+  };
+
   const autoExtractFigures = async (
     markdownText: string,
     pages: PdfPage[],
@@ -110,11 +120,12 @@ export function useUploadScreen({ onSuccess, onOpenSettings }: UseUploadScreenPr
     const matches = markdownText.match(figureRegex) || [];
     const newFigures: Record<string, string> = {};
 
+    let figureIndex = 0;
     for (const match of matches) {
       const parsed = parseFigureMarker(match);
       if (!parsed) continue;
 
-      const figureKey = `fig-${parsed.pageNum}-${parsed.description.slice(0, 20).replace(/\s/g, '_')}`;
+      const figureKey = buildFigureKey(parsed, figureIndex++);
       const page = pages.find((p) => p.pageNum === parsed.pageNum);
 
       if (page && parsed.coords) {

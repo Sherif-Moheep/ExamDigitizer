@@ -54,6 +54,7 @@ export class CompileExamUseCase {
     );
 
     // 4. Replace [FIGURE:...] markers with images
+    let figureIndex = 0;
     parsedHtml = parsedHtml.replace(
       /(?:<p>)?\[FIGURE:[^\]]+\](?:<\/p>)?/g,
       (fullMatch) => {
@@ -61,7 +62,7 @@ export class CompileExamUseCase {
         const parsed = this.parseFigureMarker(markerText);
         if (!parsed) return fullMatch;
 
-        const figureKey = `fig-${parsed.pageNum}-${parsed.description.slice(0, 20).replace(/\s/g, '_')}`;
+        const figureKey = this.buildFigureKey(parsed, figureIndex++);
 
         const imageSrc = figureImages[figureKey];
         const pageImage = pageImages.find(p => p.pageNum === parsed.pageNum);
@@ -131,6 +132,14 @@ export class CompileExamUseCase {
       },
       description: match[6].trim(),
     };
+  }
+
+  buildFigureKey(parsed: ParsedFigure, index: number): string {
+    if (parsed.coords) {
+      return `fig-${parsed.pageNum}-${parsed.coords.y1}_${parsed.coords.x1}_${parsed.coords.y2}_${parsed.coords.x2}`;
+    }
+    // Fallback for coordinate-less figures: use page number + sequential index
+    return `fig-${parsed.pageNum}-idx${index}`;
   }
 
   private generateLines(numberOfLines: number): string {

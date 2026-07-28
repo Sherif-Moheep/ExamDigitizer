@@ -49,7 +49,7 @@ const DigitizerApp: React.FC = () => {
       const cleanName = fileName.replace(/\.[^/.]+$/, '');
       document.title = `${cleanName} - Digitized`;
     } else {
-      document.title = 'Exam Digitizer - Native Print';
+      document.title = 'Exam Digitizer';
     }
   }, [view, fileName]);
 
