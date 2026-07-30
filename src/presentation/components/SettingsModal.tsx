@@ -140,7 +140,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
                 type="text"
                 value={customModel}
                 onChange={(e) => setCustomModel(e.target.value)}
-                placeholder="e.g. gemini-3.5-flash-medium"
+                placeholder="e.g. gemini-2.5-flash"
                 className="py-[10px] px-3.5 text-[0.9rem] text-text-primary bg-app-card border border-border rounded-md outline-none font-mono transition-all duration-150 focus:border-primary focus:ring-[3px] focus:ring-focusring"
               />
             </div>

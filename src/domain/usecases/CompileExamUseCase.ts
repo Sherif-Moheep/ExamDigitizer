@@ -2,9 +2,13 @@ import { MarkdownParser } from '../services/MarkdownParser';
 import { PdfPage } from '../models/PdfPage';
 import { SVG_IMAGE_ICON, SVG_SCISSOR_ICON } from '../utils/iconStrings';
 
-export interface ParsedFigure {
+export type ParsedFigure = {
   pageNum: number;
-  coords: { y1: number; x1: number; y2: number; x2: number; } | null;
+  coords: { 
+    y1: number; 
+    x1: number; 
+    y2: number; 
+    x2: number; } | null;
   description: string;
 }
 
@@ -22,6 +26,7 @@ export class CompileExamUseCase {
     // 1. Compile Markdown using the parser engine
     let parsedHtml = this.parser.parse(rawMarkdown);
 
+    // no longer used
     // 2. Format custom figures text blocks
     parsedHtml = parsedHtml.replace(
       /<blockquote>\s*<p>\s*<strong>\[FIGURE REFERENCE\]<\/strong>:([\s\S]*?)<\/p>\s*<\/blockquote>/gi,
@@ -107,7 +112,9 @@ export class CompileExamUseCase {
     return parsedHtml;
   }
 
-  private parseFigureMarker(markerText: string): ParsedFigure | null {
+  private parseFigureMarker(
+    markerText: string
+  ): ParsedFigure | null {
     const match = markerText.match(
       /\[FIGURE:(\d+):(\d+),(\d+),(\d+),(\d+):([^\]]+)\]/i
     );
@@ -134,7 +141,10 @@ export class CompileExamUseCase {
     };
   }
 
-  buildFigureKey(parsed: ParsedFigure, index: number): string {
+  buildFigureKey(
+    parsed: ParsedFigure, 
+    index: number
+  ): string {
     if (parsed.coords) {
       return `fig-${parsed.pageNum}-${parsed.coords.y1}_${parsed.coords.x1}_${parsed.coords.y2}_${parsed.coords.x2}`;
     }
@@ -142,7 +152,9 @@ export class CompileExamUseCase {
     return `fig-${parsed.pageNum}-idx${index}`;
   }
 
-  private generateLines(numberOfLines: number): string {
+  private generateLines(
+    numberOfLines: number
+  ): string {
     let linesHtml = "<div class='solve-space-container'>";
     for (let i = 0; i < numberOfLines; i++) {
       linesHtml += "<div class='writing-line'></div>";

@@ -1,11 +1,11 @@
-export interface PdfPage {
+export type PdfPage = {
   pageNum: number;
   base64: string;
   width: number;
   height: number;
 }
 
-export interface FigureCoords {
+export type FigureCoords = {
   y1: number;
   x1: number;
   y2: number;

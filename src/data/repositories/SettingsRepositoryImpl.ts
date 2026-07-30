@@ -27,7 +27,6 @@ export class SettingsRepositoryImpl implements SettingsRepository {
     if (saved === 'light' || saved === 'dark') {
       return saved;
     }
-
     return 'light';
   }
 

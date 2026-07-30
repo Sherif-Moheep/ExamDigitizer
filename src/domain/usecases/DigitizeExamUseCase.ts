@@ -13,7 +13,9 @@ export class DigitizeExamUseCase {
     return this.stripMarkdownFences(rawResult);
   }
 
-  private stripMarkdownFences(text: string): string {
+  private stripMarkdownFences(
+    text: string
+  ): string {
     if (!text) return '';
     let cleaned = text.trim();
     // Strip starting \`\`\`markdown or \`\`\`
