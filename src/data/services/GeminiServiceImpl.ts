@@ -108,6 +108,7 @@ export class GeminiServiceImpl implements GeminiService {
 
         const errorMsg = error.message || String(error);
         const lowerMsg = errorMsg.toLowerCase();
+        const retrySeconds = extractRetryDelaySeconds(error);
 
         // 429 / RESOURCE_EXHAUSTED canonical status
         const isRateLimit = errorMsg.includes('429') || lowerMsg.includes('resource_exhausted') || lowerMsg.includes('rate limit') || lowerMsg.includes('quota');
@@ -118,9 +119,18 @@ export class GeminiServiceImpl implements GeminiService {
         // Network connectivity issues
         const isNetwork = lowerMsg.includes('fetch') || lowerMsg.includes('network') || lowerMsg.includes('econnrefused');
 
-        const isRetryable = isRateLimit || isOverloaded || isTimeout || isNetwork;
+        // 429 / RESOURCE_EXHAUSTED canonical status - Fail immediately so user sees wait time UI error
+        if (isRateLimit) {
+          if (retrySeconds) {
+            throw new Error(`Gemini API rate limit or quota exceeded. Please wait ${retrySeconds} seconds before trying again, or switch models in Settings.`);
+          }
+          throw new Error('Gemini API rate limit or quota exceeded. You have sent too many requests in a short time. Please wait a minute before trying again or check your API quota.');
+        }
 
-        if (isRetryable && attempt < maxRetries) {
+        // Transient Server & Network errors (503 Overloaded, 504 Timeout, Network drops) - Retry in background
+        const isTransientServerOrNetwork = isOverloaded || isTimeout || isNetwork;
+
+        if (isTransientServerOrNetwork && attempt < maxRetries) {
           console.warn(`Gemini SDK request failed (attempt ${attempt}/${maxRetries}): ${errorMsg}. Retrying in ${delay}ms...`);
           await new Promise(resolve => setTimeout(resolve, delay));
           delay *= 2;
@@ -148,11 +158,6 @@ export class GeminiServiceImpl implements GeminiService {
           throw new Error('Google AI servers are currently overloaded due to high demand. Please wait a few seconds and try again, or switch models in Settings.');
         }
 
-        // 429 / RESOURCE_EXHAUSTED
-        if (isRateLimit) {
-          throw new Error('Gemini API rate limit or quota exceeded. You have sent too many requests in a short time. Please wait a minute before trying again or check your API quota.');
-        }
-
         // 504 / DEADLINE_EXCEEDED
         if (isTimeout) {
           throw new Error('Gemini API request timed out. Please try again.');
@@ -174,4 +179,46 @@ export class GeminiServiceImpl implements GeminiService {
 
     throw new Error('Failed to get response from Gemini after maximum retries.');
   }
+}
+
+function extractRetryDelaySeconds(error: any): number | null {
+  if (!error) return null;
+
+  try {
+    // 1. Check HTTP Response Headers if available
+    if (error?.response?.headers?.get) {
+      const retryAfter = error.response.headers.get('retry-after');
+      if (retryAfter && !isNaN(Number(retryAfter))) {
+        return Math.ceil(Number(retryAfter));
+      }
+    }
+
+    // 2. Check direct SDK properties
+    if (typeof error?.retryDelay === 'number' && error.retryDelay > 0) {
+      return Math.ceil(error.retryDelay / 1000);
+    }
+
+    // 3. Extract via Regex from error message / stringified error
+    const errorStr = (error.message || '') + ' ' + (typeof error === 'string' ? error : JSON.stringify(error));
+
+    const regexPatterns = [
+      /retry\s*(?:after|in)?\s*(\d+(?:\.\d+)?)\s*(?:s|sec|seconds)?/i,
+      /retry_delay["\s:]+(\d+(?:\.\d+)?)/i,
+      /reset\s*(?:in|after)?\s*(\d+(?:\.\d+)?)\s*(?:s|sec|seconds)?/i
+    ];
+
+    for (const pattern of regexPatterns) {
+      const match = errorStr.match(pattern);
+      if (match && match[1]) {
+        const val = parseFloat(match[1]);
+        if (!isNaN(val) && val > 0 && val < 3600) {
+          return Math.ceil(val);
+        }
+      }
+    }
+  } catch {
+    // Fail silently and return null on parsing errors
+  }
+
+  return null;
 }
