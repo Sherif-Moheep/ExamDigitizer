@@ -72,12 +72,30 @@ export class GeminiServiceImpl implements GeminiService {
           }
         ];
 
-        const response = await modelInstance.generateContent(
+        const result = await modelInstance.generateContent(
           contents,
           signal ? { signal } : undefined
         );
 
-        const text = response.response.text();
+        const response = result.response;
+
+        // Check input block feedback from SDK
+        if (response.promptFeedback?.blockReason) {
+          throw new Error(`Prompt was blocked by Gemini (${response.promptFeedback.blockReason}). Please check your document content.`);
+        }
+
+        // Check candidate finishReason
+        const candidate = response.candidates?.[0];
+        if (candidate?.finishReason && candidate.finishReason !== 'STOP' && candidate.finishReason !== 'MAX_TOKENS') {
+          if (candidate.finishReason === 'SAFETY') {
+            throw new Error('Document processing was stopped by Gemini safety filters.');
+          }
+          if (candidate.finishReason === 'RECITATION') {
+            throw new Error('Document processing was stopped due to Gemini recitation/copyright policies.');
+          }
+        }
+
+        const text = response.text();
         if (text) {
           return text;
         }
@@ -89,9 +107,18 @@ export class GeminiServiceImpl implements GeminiService {
         }
 
         const errorMsg = error.message || String(error);
-        const isRateLimit = errorMsg.includes('429') || errorMsg.toLowerCase().includes('rate limit') || errorMsg.toLowerCase().includes('exhausted');
-        const isOverloaded = errorMsg.includes('503') || errorMsg.toLowerCase().includes('overloaded') || errorMsg.toLowerCase().includes('unavailable');
-        const isRetryable = isRateLimit || isOverloaded || errorMsg.toLowerCase().includes('fetch') || errorMsg.toLowerCase().includes('network');
+        const lowerMsg = errorMsg.toLowerCase();
+
+        // 429 / RESOURCE_EXHAUSTED canonical status
+        const isRateLimit = errorMsg.includes('429') || lowerMsg.includes('resource_exhausted') || lowerMsg.includes('rate limit') || lowerMsg.includes('quota');
+        // 503 / UNAVAILABLE canonical status
+        const isOverloaded = errorMsg.includes('503') || lowerMsg.includes('unavailable') || lowerMsg.includes('overloaded');
+        // 504 / DEADLINE_EXCEEDED
+        const isTimeout = errorMsg.includes('504') || lowerMsg.includes('deadline_exceeded') || lowerMsg.includes('timeout');
+        // Network connectivity issues
+        const isNetwork = lowerMsg.includes('fetch') || lowerMsg.includes('network') || lowerMsg.includes('econnrefused');
+
+        const isRetryable = isRateLimit || isOverloaded || isTimeout || isNetwork;
 
         if (isRetryable && attempt < maxRetries) {
           console.warn(`Gemini SDK request failed (attempt ${attempt}/${maxRetries}): ${errorMsg}. Retrying in ${delay}ms...`);
@@ -100,15 +127,45 @@ export class GeminiServiceImpl implements GeminiService {
           continue;
         }
 
-        if (errorMsg.includes('API_KEY_INVALID') || errorMsg.toLowerCase().includes('key not valid') || errorMsg.includes('400')) {
-          throw new Error('Invalid API Key. Please verify your key in Settings.');
+        // Standard HTTP & Canonical API Status Mappings based on Official Google Docs
+        // 401 / 403 / UNAAUTHENTICATED / PERMISSION_DENIED / API_KEY_INVALID
+        if (errorMsg.includes('API_KEY_INVALID') || errorMsg.includes('401') || errorMsg.includes('403') || lowerMsg.includes('unauthenticated') || lowerMsg.includes('permission_denied') || lowerMsg.includes('key not valid') || lowerMsg.includes('invalid api key')) {
+          throw new Error('Invalid API Key or permission denied. Please verify your Gemini API key and access in Settings.');
         }
 
-        if (isOverloaded) {
-          throw new Error('The Gemini model is currently overloaded. Please try again in a few seconds, or switch to a stable model (like Gemini 1.5 Flash) in Settings.');
+        // 404 / NOT_FOUND
+        if (errorMsg.includes('404') || lowerMsg.includes('not_found') || lowerMsg.includes('model not found') || lowerMsg.includes('is not found')) {
+          throw new Error('The selected Gemini model is unavailable or not supported for your API key. Please select a valid model in Settings.');
         }
+
+        // 400 / INVALID_ARGUMENT
+        if (errorMsg.includes('400') || lowerMsg.includes('invalid_argument')) {
+          throw new Error('Invalid request or document payload sent to Gemini. The file may be corrupt or formatted unexpectedly.');
+        }
+
+        // 503 / UNAVAILABLE
+        if (isOverloaded) {
+          throw new Error('Google AI servers are currently overloaded due to high demand. Please wait a few seconds and try again, or switch models in Settings.');
+        }
+
+        // 429 / RESOURCE_EXHAUSTED
         if (isRateLimit) {
-          throw new Error('Gemini API rate limit exceeded. Please wait a moment before trying again, or switch to a stable model in Settings.');
+          throw new Error('Gemini API rate limit or quota exceeded. You have sent too many requests in a short time. Please wait a minute before trying again or check your API quota.');
+        }
+
+        // 504 / DEADLINE_EXCEEDED
+        if (isTimeout) {
+          throw new Error('Gemini API request timed out. Please try again.');
+        }
+
+        // Network Error
+        if (isNetwork) {
+          throw new Error('Network connection error. Unable to reach Gemini API. Please check your internet connection.');
+        }
+
+        // Safety / Blocked Content Error
+        if (lowerMsg.includes('safety') || lowerMsg.includes('blocked') || lowerMsg.includes('recitation') || lowerMsg.includes('prohibited_content')) {
+          throw new Error('Document processing was stopped by Gemini content safety filters. Please review the document.');
         }
 
         throw new Error(errorMsg);
