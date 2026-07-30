@@ -11,9 +11,16 @@ interface UseUploadScreenProps {
     autoFigures: Record<string, string>
   ) => void;
   onOpenSettings: () => void;
+  onStreamStart?: (file: File, pages: PdfPage[]) => void;
+  onStreamChunk?: (chunkMarkdown: string) => void;
 }
 
-export function useUploadScreen({ onSuccess, onOpenSettings }: UseUploadScreenProps) {
+export function useUploadScreen({
+  onSuccess,
+  onOpenSettings,
+  onStreamStart,
+  onStreamChunk,
+}: UseUploadScreenProps) {
   const { digitizeExamUseCase, settingsRepository, pdfService } = useDependencies();
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -73,20 +80,28 @@ export function useUploadScreen({ onSuccess, onOpenSettings }: UseUploadScreenPr
 
       if (abortControllerRef.current.signal.aborted) return;
 
-      setProcessingStatus('Analyzing exam content and layout...');
-      const result = await digitizeExamUseCase.execute(
+      // Dismiss initial processing modal and open editor in streaming mode
+      setIsProcessing(false);
+      if (onStreamStart) {
+        onStreamStart(selectedFile, pages);
+      }
+
+      const result = await digitizeExamUseCase.executeStream(
         base64Data,
         apiKey,
         model,
+        (accumulatedText) => {
+          if (onStreamChunk) {
+            onStreamChunk(accumulatedText);
+          }
+        },
         abortControllerRef.current.signal
       );
 
       if (abortControllerRef.current.signal.aborted) return;
 
-      setProcessingStatus('Extracting figures...');
       const autoFigures = await autoExtractFigures(result, pages, pdfService);
 
-      setIsProcessing(false);
       onSuccess(result, selectedFile, pages, autoFigures);
     } catch (err: any) {
       if (err.name === 'AbortError') {

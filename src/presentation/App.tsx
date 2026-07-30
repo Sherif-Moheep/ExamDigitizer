@@ -24,6 +24,8 @@ const DigitizerApp: React.FC = () => {
   const [fileName, setFileName] = useState<string | null>(null);
   const [theme, setTheme] = useState<'light' | 'dark'>(() => settingsRepository.getTheme());
 
+  const [isStreaming, setIsStreaming] = useState(false);
+
   // PDF Page and Figure images states
   const [pageImages, setPageImages] = useState<PdfPage[]>([]);
   const [figureImages, setFigureImages] = useState<Record<string, string>>({});
@@ -53,6 +55,19 @@ const DigitizerApp: React.FC = () => {
     }
   }, [view, fileName]);
 
+  const handleStreamStart = (file: File, pages: PdfPage[]) => {
+    setIsStreaming(true);
+    setFileName(file.name);
+    setPageImages(pages);
+    setDigitizedMarkdown('');
+    setFigureImages({});
+    setView('editor');
+  };
+
+  const handleStreamChunk = (chunkMarkdown: string) => {
+    setDigitizedMarkdown(chunkMarkdown);
+  };
+
   const handleDigitizationSuccess = (
     markdownResult: string,
     file: File,
@@ -63,6 +78,7 @@ const DigitizerApp: React.FC = () => {
     setFileName(file.name);
     setPageImages(pages);
     setFigureImages(autoFigures);
+    setIsStreaming(false);
     setView('editor');
   };
 
@@ -82,15 +98,23 @@ const DigitizerApp: React.FC = () => {
   } = useUploadScreen({
     onSuccess: handleDigitizationSuccess,
     onOpenSettings: () => setSettingsOpen(true),
+    onStreamStart: handleStreamStart,
+    onStreamChunk: handleStreamChunk,
   });
 
   const handleNewExam = () => {
+    setIsStreaming(false);
     setDigitizedMarkdown('');
     setFileName(null);
     setPageImages([]);
     setFigureImages({});
     setView('upload');
     removeSelectedFile();
+  };
+
+  const handleCancelStreaming = () => {
+    cancelProcessing();
+    setIsStreaming(false);
   };
 
   const {
@@ -103,7 +127,7 @@ const DigitizerApp: React.FC = () => {
     updateFigureImage,
     htmlPreview,
     syncStatus,
-  } = useExamEditor(digitizedMarkdown, pageImages, figureImages);
+  } = useExamEditor(digitizedMarkdown, pageImages, figureImages, isStreaming);
 
   return (
     <div className="font-sans bg-app-bg text-text-primary flex flex-col h-screen overflow-hidden antialiased print:h-auto print:overflow-visible print:bg-white select-none">
@@ -138,6 +162,8 @@ const DigitizerApp: React.FC = () => {
           solveLines={solveLines}
           onSolveLinesChange={updateSolveLines}
           onUpdateFigureImage={updateFigureImage}
+          isStreaming={isStreaming}
+          onCancelStreaming={handleCancelStreaming}
         />
       )}
 

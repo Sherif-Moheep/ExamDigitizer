@@ -6,13 +6,15 @@ import { FigureCropper } from './FigureCropper';
 interface EditorScreenProps {
   markdown: string;
   onMarkdownChange: (text: string) => void;
-  syncStatus: 'Synced' | 'Syncing...';
+  syncStatus: 'Synced' | 'Syncing...' | 'Streaming...';
   htmlPreview: string;
   pageImages: PdfPage[];
   figureImages: Record<string, string>;
   solveLines: number;
   onSolveLinesChange: (lines: number) => void;
   onUpdateFigureImage: (figureKey: string, base64: string | null) => void;
+  isStreaming?: boolean;
+  onCancelStreaming?: () => void;
 }
 
 export const EditorScreen: React.FC<EditorScreenProps> = ({
@@ -25,6 +27,8 @@ export const EditorScreen: React.FC<EditorScreenProps> = ({
   solveLines,
   onSolveLinesChange,
   onUpdateFigureImage,
+  isStreaming = false,
+  onCancelStreaming,
 }) => {
   const [thumbnailsCollapsed, setThumbnailsCollapsed] = useState(true);
   const [cropTarget, setCropTarget] = useState<{ figureKey: string; pageNum: number } | null>(
@@ -65,22 +69,44 @@ export const EditorScreen: React.FC<EditorScreenProps> = ({
       {/* 1. Editor column */}
       <section className="flex-1 flex flex-col gap-3 overflow-hidden print:hidden">
         <div className="flex items-center justify-between px-1">
-          <h3 className="text-[0.95rem] font-semibold text-text-secondary">
+          <h3 className="text-[0.95rem] font-semibold text-text-secondary flex items-center gap-2">
             1. Editable Exam Markup
+            {isStreaming && (
+              <span className="text-[0.75rem] font-normal px-2 py-0.5 rounded bg-primary-light text-primary animate-pulse">
+                Live Generating...
+              </span>
+            )}
           </h3>
-          <span
-            className="text-[0.8rem] text-text-muted flex items-center gap-1.5 transition-opacity duration-200"
-            style={{ opacity: syncStatus === 'Syncing...' ? 0.7 : 1 }}
-          >
-            <span className="w-2 h-2 rounded-full bg-[#10b981]" />
-            {syncStatus}
-          </span>
+          <div className="flex items-center gap-3">
+            {isStreaming && onCancelStreaming && (
+              <button
+                onClick={onCancelStreaming}
+                className="text-[0.75rem] font-semibold text-danger hover:underline cursor-pointer"
+              >
+                Stop Generation
+              </button>
+            )}
+            <span
+              className="text-[0.8rem] text-text-muted flex items-center gap-1.5 transition-opacity duration-200"
+              style={{ opacity: syncStatus === 'Syncing...' ? 0.7 : 1 }}
+            >
+              <span
+                className={`w-2 h-2 rounded-full ${
+                  isStreaming ? 'bg-primary animate-ping' : 'bg-[#10b981]'
+                }`}
+              />
+              {syncStatus}
+            </span>
+          </div>
         </div>
         <textarea
           value={markdown}
+          readOnly={isStreaming}
           onChange={(e) => onMarkdownChange(e.target.value)}
-          placeholder="Type raw markdown here..."
-          className="flex-1 w-full font-mono text-[13.5px] leading-[1.6] p-4 border border-border rounded-lg bg-app-card text-text-primary resize-none shadow-sm outline-none transition-all duration-200 focus:border-primary focus:shadow-md focus:ring-[3px] focus:ring-focusring"
+          placeholder={isStreaming ? 'Receiving digitized exam content from Gemini...' : 'Type raw markdown here...'}
+          className={`flex-1 w-full font-mono text-[13.5px] leading-[1.6] p-4 border border-border rounded-lg bg-app-card text-text-primary resize-none shadow-sm outline-none transition-all duration-200 focus:border-primary focus:shadow-md focus:ring-[3px] focus:ring-focusring ${
+            isStreaming ? 'opacity-90 cursor-not-allowed bg-app-hover' : ''
+          }`}
         />
       </section>
 

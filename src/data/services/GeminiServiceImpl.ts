@@ -52,6 +52,16 @@ export class GeminiServiceImpl implements GeminiService {
       model: string,
       signal?: AbortSignal
   ): Promise<string> {
+    return this.digitizeStream(pdfBase64, apiKey, model, () => {}, signal);
+  }
+
+  async digitizeStream(
+      pdfBase64: string,
+      apiKey: string,
+      model: string,
+      onChunk: (accumulatedText: string) => void,
+      signal?: AbortSignal
+  ): Promise<string> {
     const genAI = new GoogleGenerativeAI(apiKey);
     const modelInstance = genAI.getGenerativeModel({
       model: model,
@@ -82,6 +92,7 @@ export class GeminiServiceImpl implements GeminiService {
           const text = chunk.text();
           if (text) {
             fullText += text;
+            onChunk(fullText);
           }
         }
         if (fullText) {
@@ -111,7 +122,7 @@ export class GeminiServiceImpl implements GeminiService {
         }
 
         if (isOverloaded) {
-          throw new Error('The Gemini model is currently overloaded. Please try again in a few seconds, or switch to a stable model (like Gemini 1.5 Flash) in Settings.');
+          throw new Error('The Gemini model is currently overloaded. Please try again in a few seconds, or switch to a stable model in Settings.');
         }
         if (isRateLimit) {
           throw new Error('Gemini API rate limit exceeded. Please wait a moment before trying again, or switch to a stable model in Settings.');

@@ -5,7 +5,8 @@ import { PdfPage } from '../../domain/models/PdfPage';
 export function useExamEditor(
   initialMarkdown: string,
   initialPageImages: PdfPage[] = [],
-  initialFigureImages: Record<string, string> = {}
+  initialFigureImages: Record<string, string> = {},
+  isStreaming = false
 ) {
   const { compileExamUseCase } = useDependencies();
   const [markdown, setMarkdown] = useState(initialMarkdown);
@@ -13,18 +14,44 @@ export function useExamEditor(
   const [figureImages, setFigureImages] = useState<Record<string, string>>(initialFigureImages);
   const [solveLines, setSolveLines] = useState(6);
   const [htmlPreview, setHtmlPreview] = useState('');
-  const [syncStatus, setSyncStatus] = useState<'Synced' | 'Syncing...'>('Synced');
+  const [syncStatus, setSyncStatus] = useState<'Synced' | 'Syncing...' | 'Streaming...'>('Synced');
   const timerRef = useRef<number | null>(null);
+  const lastCompileTimeRef = useRef<number>(0);
+  const compileThrottleTimerRef = useRef<number | null>(null);
 
-  // Sync state if initial values change (e.g., freshly loaded digitized output)
+  // Sync state if initial values change (e.g., streaming chunks arriving or freshly loaded digitized output)
   useEffect(() => {
     setMarkdown(initialMarkdown);
     setPageImages(initialPageImages);
     setFigureImages(initialFigureImages);
-    setHtmlPreview(
-      compileExamUseCase.execute(initialMarkdown, 6, initialFigureImages, initialPageImages)
-    );
-  }, [initialMarkdown, initialPageImages, initialFigureImages, compileExamUseCase]);
+
+    if (isStreaming) {
+      setSyncStatus('Streaming...');
+      // Throttle compilation to every 200ms while streaming
+      const now = Date.now();
+      if (now - lastCompileTimeRef.current >= 200) {
+        lastCompileTimeRef.current = now;
+        setHtmlPreview(
+          compileExamUseCase.execute(initialMarkdown, 6, initialFigureImages, initialPageImages)
+        );
+      } else {
+        if (!compileThrottleTimerRef.current) {
+          compileThrottleTimerRef.current = window.setTimeout(() => {
+            compileThrottleTimerRef.current = null;
+            lastCompileTimeRef.current = Date.now();
+            setHtmlPreview(
+              compileExamUseCase.execute(initialMarkdown, 6, initialFigureImages, initialPageImages)
+            );
+          }, 200);
+        }
+      }
+    } else {
+      setSyncStatus('Synced');
+      setHtmlPreview(
+        compileExamUseCase.execute(initialMarkdown, solveLines, initialFigureImages, initialPageImages)
+      );
+    }
+  }, [initialMarkdown, initialPageImages, initialFigureImages, compileExamUseCase, isStreaming, solveLines]);
 
   const triggerCompilation = (
     text: string,
@@ -72,6 +99,9 @@ export function useExamEditor(
     return () => {
       if (timerRef.current) {
         clearTimeout(timerRef.current);
+      }
+      if (compileThrottleTimerRef.current) {
+        clearTimeout(compileThrottleTimerRef.current);
       }
     };
   }, []);
