@@ -54,7 +54,7 @@ export const EditorScreen: React.FC<EditorScreenProps> = ({
   }, [htmlPreview]);
 
   return (
-    <main className="flex-1 flex overflow-hidden p-5 gap-5 h-[calc(100vh-64px)] print:block print:p-0 print:m-0 print:h-auto print:overflow-visible">
+    <main className="flex-1 flex overflow-hidden p-5 gap-5 h-[calc(100vh-64px)] print:block print:p-0 print:m-0 print:gap-0 print:h-auto print:overflow-visible print:bg-white">
       {/* PDF Thumbnails Sidebar */}
       <PdfThumbnails
         pageImages={pageImages}
@@ -110,7 +110,7 @@ export const EditorScreen: React.FC<EditorScreenProps> = ({
             </span>
           </div>
         </div>
-        <div className="flex-1 bg-[#cbd5e1] dark:bg-slate-900 rounded-lg border border-border p-6 overflow-y-auto shadow-sm flex justify-center items-start print:bg-transparent print:border-none print:p-0 print:shadow-none print:overflow-visible print:block print:h-auto">
+        <div className="flex-1 bg-[#cbd5e1] dark:bg-slate-900 rounded-lg border border-border p-6 overflow-y-auto shadow-sm flex justify-center items-start print:bg-white print:border-none print:p-0 print:shadow-none print:rounded-none print:overflow-visible print:block print:h-auto">
           <div
             id="pdf-container"
             className="bg-white w-full max-w-[800px] min-h-[297mm] px-[70px] py-[60px] rounded-[4px] shadow-lg leading-[1.75] text-[#1e293b] text-[15px] print:border-none print:p-0 print:shadow-none print:max-w-full print:w-full print:min-h-0 print:bg-white print:text-black"

@@ -1,0 +1,73 @@
+/* === PRINT STYLES === */
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 12mm;
+  }
+
+  html,
+  body {
+    background: white !important;
+    height: auto;
+    overflow: visible;
+  }
+
+  /* Kill ALL dark-mode artifacts on every wrapper */
+  *, *::before, *::after {
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  /* Force preview sheet background to white and clear its styling constraints */
+  #pdf-container {
+    background: white !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+  }
+
+  #pdf-container,
+  #pdf-container h1,
+  #pdf-container h2,
+  #pdf-container h3,
+  #pdf-container h4,
+  #pdf-container p,
+  #pdf-container li,
+  #pdf-container td,
+  #pdf-container th {
+    color: black !important;
+  }
+
+  .writing-line {
+    border-bottom: 1px solid #bdf !important;
+  }
+
+  .page-break {
+    border-top: none;
+    margin: 0;
+    break-before: page;
+    page-break-before: always;
+    height: 0;
+  }
+  .page-break::after {
+    display: none;
+  }
+
+  .figure-embed .figure-actions { display: none !important; }
+  .figure-embed { border: none; background: transparent; }
+  .figure-embed .figure-image {
+    max-height: 55mm !important;
+    object-fit: contain;
+    width: auto !important;
+  }
+  .figure-embed .figure-caption { background: transparent; border-top: none; }
+  .pdf-thumbnails { display: none !important; }
+  .thumbnail-lightbox { display: none !important; }
+  .thumbnails-expand-btn { display: none !important; }
+}
