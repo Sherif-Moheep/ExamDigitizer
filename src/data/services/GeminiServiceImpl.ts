@@ -72,14 +72,20 @@ export class GeminiServiceImpl implements GeminiService {
           }
         ];
 
-        const response = await modelInstance.generateContent(
+        const result = await modelInstance.generateContentStream(
           contents,
           signal ? { signal } : undefined
         );
 
-        const text = response.response.text();
-        if (text) {
-          return text;
+        let fullText = '';
+        for await (const chunk of result.stream) {
+          const text = chunk.text();
+          if (text) {
+            fullText += text;
+          }
+        }
+        if (fullText) {
+          return fullText;
         }
 
         throw new Error('Empty response received from Gemini model.');
