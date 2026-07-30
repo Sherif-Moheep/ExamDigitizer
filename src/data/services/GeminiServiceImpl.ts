@@ -19,9 +19,16 @@ Formatting Rules:
    - Ignore and omit all handwritten markings, scribbles, student answers/notes written on the paper, grader checkmarks, corrections, score indicators, or teacher comments.
    - Ignore and strip out any hand-drawn sketches, graphs, coordinate axes, plots, diagrams, or drawings made by a student (often written in pen or pencil inside solve spaces or margins). Focus ONLY on transcribing official printed/typeset exam content and diagrams.
 5. Lists: Format multiple-choice options as standard Markdown bullet lists (e.g., * (a) Option A).
-   - Convert any True or False style questions to have two separate bulleted choices: * (a) True and * (b) False, rather than writing the words 'True' and 'False' or '(True/False)' in the question description line.
-6. Placeholders: Insert the exact text [SOLVE_SPACE_HERE] on a new line, ensuring there is a blank line before it (separated by an empty line from the question text), immediately following the end of every question and sub-question (both multiple-choice and long-answer).
-7. Figures & Diagrams: For ANY figure, diagram, graph, image, circuit, drawing, or visual element that is RELEVANT to a question:
+6. True/False Questions: For EVERY True or False question, you MUST remove the words "True or False", "(T/F)", "(True/False)", or similar phrasing from the question text itself, and instead ALWAYS add two explicit bullet-point choices on separate lines after the question:
+   * (a) True
+   * (b) False
+   For example, if the original question reads: "1. (T/F) A binary search tree is always balanced.", output:
+   **1.** A binary search tree is always balanced.
+   * (a) True
+   * (b) False
+   Do NOT leave True/False questions without these two explicit choices. Every single T/F question must have them.
+7. Placeholders: Insert the exact text [SOLVE_SPACE_HERE] on a new line, ensuring there is a blank line before it (separated by an empty line from the question text), immediately following the end of every question and sub-question (both multiple-choice and long-answer).
+8. Figures & Diagrams: For ANY figure, diagram, graph, image, circuit, drawing, or visual element that is RELEVANT to a question:
    - Write [FIGURE:P:Y1,X1,Y2,X2:description] on its own line where:
      - P = the PDF page number (1-indexed)
      - Y1,X1 = top-left corner coordinates (0-1000 normalized scale)
@@ -31,9 +38,9 @@ Formatting Rules:
    - Example: [FIGURE:2:120,50,450,800:Right triangle with hypotenuse c and legs a=3, b=4]
    - ONLY include figures relevant to answering questions (diagrams, circuits, graphs, geometric shapes, charts)
    - IGNORE decorative elements: university logos, headers, footers, watermarks, stamps, signatures, page borders. Do NOT use Mermaid.js code blocks.
-8. Preserve Structure: Keep the original question numbering, sub-questions, instructions, and sections. Use --- (horizontal rules) between major exam sections.
-9. Output Constraints: Do NOT add answers or solutions. Do NOT skip any exam content. Output ONLY the markdown text — no explanations, no preamble, and no HTML markdown code fences.
-10. Table Formatting: For any table, matrix (non-mathematical), grid, or tabular data:
+9. Preserve Structure: Keep the original question numbering, sub-questions, instructions, and sections. Use --- (horizontal rules) between major exam sections.
+10. Output Constraints: Do NOT add answers or solutions. Do NOT skip any exam content. Output ONLY the markdown text — no explanations, no preamble, and no HTML markdown code fences.
+11. Table Formatting: For any table, matrix (non-mathematical), grid, or tabular data:
     - You MUST ALWAYS format it as a standard Markdown table using pipes and hyphens (e.g., \`| Header 1 | Header 2 |\` followed by \`|---|---|\` and the row data).
     - Do NOT output tables as preformatted ASCII art, inside code blocks, or as unstructured tab-separated/space-separated text.
     - Ensure all cells are properly aligned and that math formulas inside tables are enclosed in standard LaTeX delimiters ($...$).`;
@@ -46,7 +53,10 @@ export class GeminiServiceImpl implements GeminiService {
       signal?: AbortSignal
   ): Promise<string> {
     const genAI = new GoogleGenerativeAI(apiKey);
-    const modelInstance = genAI.getGenerativeModel({ model: model });
+    const modelInstance = genAI.getGenerativeModel({
+      model: model,
+      systemInstruction: EXAM_PROMPT,
+    });
 
     const maxRetries = 5;
     let delay = 2000;
@@ -54,7 +64,6 @@ export class GeminiServiceImpl implements GeminiService {
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       try {
         const contents = [
-          EXAM_PROMPT,
           {
             inlineData: {
               data: pdfBase64,
