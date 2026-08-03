@@ -130,7 +130,7 @@ npm install
 npm run dev
 
 # 4. Open in browser
-# Server will run at http://localhost:5173
+# Open the local URL printed in your terminal (typically http://localhost:5173)
 
 # 5. Build for production release
 npm run build
