@@ -1,10 +1,10 @@
 @import 'katex/dist/katex.min.css';
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap');
-@import './styles/base.css';
-@import './styles/pdf-content.css';
-@import './styles/print.css';
-@import './styles/thumbnails.css';
-@import './styles/figure-cropper.css';
+@import './presentation/styles/base.css';
+@import './presentation/styles/pdf-content.css';
+@import './presentation/styles/print.css';
+@import './presentation/styles/thumbnails.css';
+@import './presentation/styles/figure-cropper.css';
 
 @tailwind base;
 @tailwind components;
