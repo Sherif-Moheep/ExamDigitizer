@@ -64,7 +64,7 @@ textarea::-webkit-scrollbar-thumb,
 }
 
 textarea::-webkit-scrollbar-thumb:hover,
-.pdf-wrapper::-webkit-scrollbar-thumb:hover,
+.pdf-wrapper::-webkit-scrollbar-hover,
 .modal-body::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
 }
