@@ -8,21 +8,26 @@ import { GeminiServiceImpl } from '../data/services/GeminiServiceImpl';
 import { PdfServiceImpl } from '../data/services/PdfServiceImpl';
 import { useUploadScreen } from './hooks/useUploadScreen';
 import { useExamEditor } from './hooks/useExamEditor';
+import { useIsMobile } from './hooks/useIsMobile';
 import { Header } from './components/Header';
 import { UploadScreen } from './components/UploadScreen';
 import { EditorScreen } from './components/EditorScreen';
 import { SettingsModal } from './components/SettingsModal';
 import { ProcessingOverlay } from './components/ProcessingOverlay';
+import { MobileGuardScreen } from './components/MobileGuardScreen';
 
 import { PdfPage } from '../domain/models/PdfPage';
 
 const DigitizerApp: React.FC = () => {
   const { settingsRepository } = useDependencies();
+  const isMobile = useIsMobile();
+  const [bypassedMobileGuard, setBypassedMobileGuard] = useState(false);
   const [view, setView] = useState<'upload' | 'editor'>('upload');
   const [digitizedMarkdown, setDigitizedMarkdown] = useState('');
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [fileName, setFileName] = useState<string | null>(null);
   const [theme, setTheme] = useState<'light' | 'dark'>(() => settingsRepository.getTheme());
+
 
   // PDF Page and Figure images states
   const [pageImages, setPageImages] = useState<PdfPage[]>([]);
@@ -104,6 +109,10 @@ const DigitizerApp: React.FC = () => {
     htmlPreview,
     syncStatus,
   } = useExamEditor(digitizedMarkdown, pageImages, figureImages);
+
+  if (isMobile && !bypassedMobileGuard) {
+    return <MobileGuardScreen onBypass={() => setBypassedMobileGuard(true)} />;
+  }
 
   return (
     <div className="font-sans bg-app-bg text-text-primary flex flex-col h-screen overflow-hidden antialiased print:h-auto print:overflow-visible print:bg-white select-none">
