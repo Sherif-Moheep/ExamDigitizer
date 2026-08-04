@@ -11,4 +11,5 @@ export default defineConfig({
       { find: /^pdfjs-dist\/build\/pdf\.worker\.min\.mjs$/, replacement: 'pdfjs-dist/legacy/build/pdf.worker.min.mjs' },
     ],
   },
+  server: { host: true}
 });

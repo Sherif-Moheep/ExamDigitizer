@@ -23,8 +23,6 @@ I built **Exam Digitizer** to eliminate this friction. It transcribes scanned PD
 
 ### ⚡ Quick Demo
 
-<!-- Replace demo.gif with your actual recorded GIF or MP4 video link -->
-
 ![Exam Digitizer Quick Demo](./docs/screenshots/demo.gif)
 
 ---
@@ -121,7 +119,7 @@ To run, build, or contribute to Exam Digitizer locally on your machine:
 ```bash
 # 1. Clone the repository
 git clone https://github.com/Sherif-Moheep/ExamDigitizer.git
-cd ExamDigitizer-React
+cd ExamDigitizer
 
 # 2. Install dependencies
 npm install
@@ -130,10 +128,16 @@ npm install
 npm run dev
 
 # 4. Open in browser
-# Server will run at http://localhost:5173
+# Server will run at http://localhost:5173/ExamDigitizer/
 
-# 5. Build for production release
+# 5. Configure API Key
+# Click the Settings icon in the top right to enter your Google Gemini API Key
+
+# 6. Build for production release
 npm run build
+
+# 7. Preview production build locally
+npm run preview
 ```
 
 ---
