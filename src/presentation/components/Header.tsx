@@ -2,7 +2,7 @@ import React from 'react';
 import logo from '../../assets/logo.png';
 import { GithubIcon, ArrowLeftIcon, MoonIcon, SunIcon, SettingsIcon, PrintIcon } from './Icons';
 
-interface HeaderProps {
+type HeaderProps = {
   view: 'upload' | 'editor';
   onNewExam: () => void;
   onOpenSettings: () => void;

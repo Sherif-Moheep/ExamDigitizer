@@ -1,7 +1,7 @@
 import React from 'react';
 import { LaptopIcon } from './Icons';
 
-interface MobileGuardScreenProps {
+type MobileGuardScreenProps = {
   onBypass: () => void;
 }
 

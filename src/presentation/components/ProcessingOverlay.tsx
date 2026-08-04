@@ -1,6 +1,6 @@
 import React from 'react';
 
-interface ProcessingOverlayProps {
+type ProcessingOverlayProps = {
   isOpen: boolean;
   status: string;
   onCancel: () => void;

@@ -8,8 +8,19 @@ export class MarkdownParserImpl implements MarkdownParser {
   private md: markdownIt;
 
   constructor() {
-    this.md = markdownIt({ html: true, breaks: true })
-      .use(texmath, { engine: katex, delimiters: 'dollars' });
+    this.md = markdownIt(
+        {
+          html: true,
+          breaks: true
+        }
+    )
+      .use(
+          texmath,
+          {
+            engine: katex,
+            delimiters: 'dollars'
+          }
+      );
   }
 
   parse(input: string): string {

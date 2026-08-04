@@ -3,7 +3,7 @@ import { useDependencies } from '../di/DiContext';
 import { PdfPage } from '../../domain/models/PdfPage';
 import { PdfService } from '../../domain/services/PdfService';
 
-interface UseUploadScreenProps {
+type UseUploadScreenProps = {
   onSuccess: (
     markdownResult: string,
     file: File,

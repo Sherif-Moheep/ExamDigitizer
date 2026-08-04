@@ -11,9 +11,9 @@
 
 ## 💡 The Motive
 
-I prefer solving past-paper exams on a graphic tablet, but most available past papers are low-quality scanned PDFs compiled from mobile photos. Because these photos were taken by students after sitting the exams, they are frequently cluttered with handwritten solutions, pencil scribbles, grader checkmarks, and scanner noise.
+I prefer solving past-paper exams using a graphic tablet (you can also use a tablet with a stylus), but most available past papers are low-quality scanned PDFs compiled from mobile photos. Because these photos were taken by students after sitting the exams, they are frequently cluttered with handwritten solutions, pencil scribbles, grader checkmarks, and scanner noise.
 
-Working with these messy files introduced significant friction into my study routine—forcing me to manually screenshot individual questions and clean them up inside note-taking apps just to create a usable workspace.
+Working with these messy files introduced significant friction into my study routine—forcing me to manually screenshot individual questions and clean them up inside note-taking apps just to create a usable workspace that I can reference later.
 
 I built **Exam Digitizer** to eliminate this friction. It transcribes scanned PDF exams using **Google Gemini LLMs** (which automatically strip out handwritten notes and student scribbles), converts mathematical notation into LaTeX, and extracts diagrams via an interactive canvas cropper. You can insert customizable **solve spaces** under questions, rendering the exam into a clean, A4-formatted, print-ready PDF with ample room to write.
 
