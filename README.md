@@ -11,9 +11,9 @@
 
 ## 💡 The Motive
 
-I prefer solving past-paper exams on a graphic tablet, but most available past papers are low-quality scanned PDFs compiled from mobile photos. Because these photos were taken by students after sitting the exams, they are frequently cluttered with handwritten solutions, pencil scribbles, grader checkmarks, and scanner noise.
+I prefer solving past-paper exams using a graphic tablet (you can also use a tablet with a stylus), but most available past papers are low-quality scanned PDFs compiled from mobile photos. Because these photos were taken by students after sitting the exams, they are frequently cluttered with handwritten solutions, pencil scribbles, grader checkmarks, and scanner noise.
 
-Working with these messy files introduced significant friction into my study routine—forcing me to manually screenshot individual questions and clean them up inside note-taking apps just to create a usable workspace.
+Working with these messy files introduced significant friction into my study routine—forcing me to manually screenshot individual questions and clean them up inside note-taking apps just to create a usable workspace that I can reference later.
 
 I built **Exam Digitizer** to eliminate this friction. It transcribes scanned PDF exams using **Google Gemini LLMs** (which automatically strip out handwritten notes and student scribbles), converts mathematical notation into LaTeX, and extracts diagrams via an interactive canvas cropper. You can insert customizable **solve spaces** under questions, rendering the exam into a clean, A4-formatted, print-ready PDF with ample room to write.
 
@@ -22,8 +22,6 @@ I built **Exam Digitizer** to eliminate this friction. It transcribes scanned PD
 ## 🖼️ Visual Preview
 
 ### ⚡ Quick Demo
-
-<!-- Replace demo.gif with your actual recorded GIF or MP4 video link -->
 
 ![Exam Digitizer Quick Demo](./docs/screenshots/demo.gif)
 
@@ -121,7 +119,7 @@ To run, build, or contribute to Exam Digitizer locally on your machine:
 ```bash
 # 1. Clone the repository
 git clone https://github.com/Sherif-Moheep/ExamDigitizer.git
-cd ExamDigitizer-React
+cd ExamDigitizer
 
 # 2. Install dependencies
 npm install
@@ -130,10 +128,16 @@ npm install
 npm run dev
 
 # 4. Open in browser
-# Open the local URL printed in your terminal (typically http://localhost:5173)
+# Server will run at http://localhost:5173/ExamDigitizer/
 
-# 5. Build for production release
+# 5. Configure API Key
+# Click the Settings icon in the top right to enter your Google Gemini API Key
+
+# 6. Build for production release
 npm run build
+
+# 7. Preview production build locally
+npm run preview
 ```
 
 ---

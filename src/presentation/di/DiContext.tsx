@@ -4,7 +4,7 @@ import { DigitizeExamUseCase } from '../../domain/usecases/DigitizeExamUseCase';
 import { SettingsRepository } from '../../domain/repositories/SettingsRepository';
 import { PdfService } from '../../domain/services/PdfService';
 
-export interface Dependencies {
+export type Dependencies = {
   compileExamUseCase: CompileExamUseCase;
   digitizeExamUseCase: DigitizeExamUseCase;
   settingsRepository: SettingsRepository;

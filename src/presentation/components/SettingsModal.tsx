@@ -2,7 +2,7 @@ import React from 'react';
 import { useSettingsModal, GEMINI_MODELS } from '../hooks/useSettingsModal';
 import { EyeIcon, EyeOffIcon } from './Icons';
 
-interface SettingsModalProps {
+type SettingsModalProps = {
   isOpen: boolean;
   onClose: () => void;
 }

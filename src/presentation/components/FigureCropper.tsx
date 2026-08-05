@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { ScissorIcon } from './Icons';
 
-interface FigureCropperProps {
+type FigureCropperProps = {
   pageImage: string;
   figureKey: string;
   onApply: (figureKey: string, croppedBase64: string | null) => void;
@@ -9,7 +9,7 @@ interface FigureCropperProps {
   existingCrop: boolean;
 }
 
-interface SelectionArea {
+type SelectionArea = {
   startX: number;
   startY: number;
   endX: number;

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { PdfPage } from '../../domain/models/PdfPage';
 import { ChevronLeftIcon, ChevronRightIcon } from './Icons';
 
-interface PdfThumbnailsProps {
+type PdfThumbnailsProps = {
   pageImages: PdfPage[];
   collapsed: boolean;
   onToggleCollapse: () => void;

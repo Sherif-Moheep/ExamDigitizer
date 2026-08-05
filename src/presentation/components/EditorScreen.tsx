@@ -3,7 +3,7 @@ import { PdfPage } from '../../domain/models/PdfPage';
 import { PdfThumbnails } from './PdfThumbnails';
 import { FigureCropper } from './FigureCropper';
 
-interface EditorScreenProps {
+type EditorScreenProps = {
   markdown: string;
   onMarkdownChange: (text: string) => void;
   syncStatus: 'Synced' | 'Syncing...';

@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { UploadIcon, PdfIcon, PlayIcon, InfoIcon } from './Icons';
 
-interface UploadScreenProps {
+type UploadScreenProps = {
   selectedFile: File | null;
   error: string | null;
   isDragOver: boolean;
