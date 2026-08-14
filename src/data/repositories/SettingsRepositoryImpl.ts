@@ -4,7 +4,7 @@ export class SettingsRepositoryImpl implements SettingsRepository {
   private API_KEY_KEY = 'examdigitizer_api_key';
   private MODEL_KEY = 'examdigitizer_model';
   private THEME_KEY = 'examdigitizer_theme';
-  private DEFAULT_MODEL = 'gemini-3.6-flash';
+  private DEFAULT_MODEL = 'gemini-3.7-flash';
 
   getApiKey(): string {
     return localStorage.getItem(this.API_KEY_KEY) || '';

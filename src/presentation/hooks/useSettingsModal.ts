@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { useDependencies } from '../di/DiContext';
 
 export const GEMINI_MODELS = [
-  { id: 'gemini-3.6-flash', name: 'Gemini 3.6 Flash (Recommended)' },
+  { id: 'gemini-3.7-flash', name: 'Gemini 3.7 Flash (Recommended)' },
+  { id: 'gemini-3.6-flash', name: 'Gemini 3.6 Flash' },
   { id: 'gemini-3.5-flash', name: 'Gemini 3.5 Flash' },
   { id: 'gemini-3.5-flash-lite', name: 'Gemini 3.5 Flash Lite' },
   { id: 'gemini-3.1-flash-lite', name: 'Gemini 3.1 Flash Lite' }
@@ -39,7 +40,7 @@ export function useSettingsModal(isOpen: boolean, onClose: () => void) {
         setCustomModel(storedModel);
         setShowCustomInput(true);
       } else {
-        setSelectedModel('gemini-3.5-flash');
+        setSelectedModel('gemini-3.7-flash');
         setCustomModel('');
         setShowCustomInput(false);
       }
