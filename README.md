@@ -23,7 +23,7 @@ I built **Exam Digitizer** to eliminate this friction. It transcribes scanned PD
 
 ### ⚡ Quick Demo
 
-![Exam Digitizer Quick Demo](./docs/screenshots/demo.gif)
+https://github.com/user-attachments/assets/5f52b224-ad4e-412f-97d0-fd880873340e
 
 ---
 
