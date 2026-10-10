@@ -7,6 +7,14 @@
   line-height: 1.65;
   letter-spacing: 0.01em;
   word-spacing: 0.04em;
+  box-sizing: border-box;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+#pdf-container img,
+#pdf-container svg {
+  max-width: 100%;
 }
 
 #pdf-container h1,
@@ -130,8 +138,31 @@ p, ul, ol, .katex-display {
   break-inside: auto;
 }
 
-.katex-display {
+/* --- KATEX MATH FORMATTING & LINE WRAPPING --- */
+#pdf-container .katex {
+  white-space: normal !important;
+}
+
+#pdf-container .katex .base {
+  white-space: normal !important;
+  display: inline !important;
+  width: auto !important;
+}
+
+#pdf-container .katex .mspace {
+  display: inline-block;
+}
+
+#pdf-container .katex-display {
   margin: 18px 0 !important;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+#pdf-container .katex-display > .katex {
+  white-space: normal !important;
+  text-align: center;
 }
 
 hr {
