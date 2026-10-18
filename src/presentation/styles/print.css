@@ -48,6 +48,10 @@
     border-bottom: 1px solid #bdf !important;
   }
 
+  #pdf-container .katex-display {
+    overflow-x: visible !important;
+  }
+
   .page-break {
     border-top: none;
     margin: 0;
