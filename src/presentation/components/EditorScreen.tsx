@@ -13,6 +13,7 @@ type EditorScreenProps = {
   solveLines: number;
   onSolveLinesChange: (lines: number) => void;
   onUpdateFigureImage: (figureKey: string, base64: string | null) => void;
+  onInsertSample?: () => void;
 }
 
 export const EditorScreen: React.FC<EditorScreenProps> = ({
@@ -25,6 +26,7 @@ export const EditorScreen: React.FC<EditorScreenProps> = ({
   solveLines,
   onSolveLinesChange,
   onUpdateFigureImage,
+  onInsertSample,
 }) => {
   const [thumbnailsCollapsed, setThumbnailsCollapsed] = useState(true);
   const [cropTarget, setCropTarget] = useState<{ figureKey: string; pageNum: number } | null>(
@@ -55,19 +57,33 @@ export const EditorScreen: React.FC<EditorScreenProps> = ({
 
   return (
     <main className="flex-1 flex overflow-hidden p-5 gap-5 h-[calc(100vh-64px)] print:block print:p-0 print:m-0 print:gap-0 print:h-auto print:overflow-visible print:bg-white">
-      {/* PDF Thumbnails Sidebar */}
-      <PdfThumbnails
-        pageImages={pageImages}
-        collapsed={thumbnailsCollapsed}
-        onToggleCollapse={() => setThumbnailsCollapsed(!thumbnailsCollapsed)}
-      />
+      {/* PDF Thumbnails Sidebar (only shown when pages are loaded from PDF) */}
+      {pageImages && pageImages.length > 0 && (
+        <PdfThumbnails
+          pageImages={pageImages}
+          collapsed={thumbnailsCollapsed}
+          onToggleCollapse={() => setThumbnailsCollapsed(!thumbnailsCollapsed)}
+        />
+      )}
 
       {/* 1. Editor column */}
       <section className="flex-1 flex flex-col gap-3 overflow-hidden print:hidden">
         <div className="flex items-center justify-between px-1">
-          <h3 className="text-[0.95rem] font-semibold text-text-secondary">
-            1. Editable Exam Markup
-          </h3>
+          <div className="flex items-center gap-2">
+            <h3 className="text-[0.95rem] font-semibold text-text-secondary">
+              1. Editable Exam Markup
+            </h3>
+            {onInsertSample && (
+              <button
+                type="button"
+                onClick={onInsertSample}
+                className="text-[0.75rem] text-primary hover:text-primary-hover font-medium underline cursor-pointer bg-transparent border-none p-0 ml-1 transition-colors"
+                title="Load sample exam formatting syntax"
+              >
+                (Load Syntax Example)
+              </button>
+            )}
+          </div>
           <span
             className="text-[0.8rem] text-text-muted flex items-center gap-1.5 transition-opacity duration-200"
             style={{ opacity: syncStatus === 'Syncing...' ? 0.7 : 1 }}
