@@ -15,6 +15,7 @@ import { EditorScreen } from './components/EditorScreen';
 import { SettingsModal } from './components/SettingsModal';
 import { ProcessingOverlay } from './components/ProcessingOverlay';
 import { MobileGuardScreen } from './components/MobileGuardScreen';
+import { SAMPLE_EXAM_MARKDOWN } from '../domain/constants/sampleExamMarkdown';
 
 import { PdfPage } from '../domain/models/PdfPage';
 
@@ -50,8 +51,8 @@ const DigitizerApp: React.FC = () => {
 
   // Sync document title matching original logic
   useEffect(() => {
-    if (view === 'editor' && fileName) {
-      const cleanName = fileName.replace(/\.[^/.]+$/, '');
+    if (view === 'editor') {
+      const cleanName = fileName ? fileName.replace(/\.[^/.]+$/, '') : 'Untitled Exam';
       document.title = `${cleanName} - Digitized`;
     } else {
       document.title = 'Exam Digitizer';
@@ -110,6 +111,19 @@ const DigitizerApp: React.FC = () => {
     syncStatus,
   } = useExamEditor(digitizedMarkdown, pageImages, figureImages);
 
+  const handleOpenEditorDirectly = () => {
+    if (!markdown) {
+      setDigitizedMarkdown(SAMPLE_EXAM_MARKDOWN);
+      updateMarkdown(SAMPLE_EXAM_MARKDOWN);
+    }
+    if (!fileName) {
+      setFileName('Untitled Exam');
+    }
+    setPageImages([]);
+    setFigureImages({});
+    setView('editor');
+  };
+
   if (isMobile && !bypassedMobileGuard) {
     return <MobileGuardScreen onBypass={() => setBypassedMobileGuard(true)} />;
   }
@@ -122,6 +136,7 @@ const DigitizerApp: React.FC = () => {
         onOpenSettings={() => setSettingsOpen(true)}
         theme={theme}
         onToggleTheme={handleToggleTheme}
+        onOpenEditor={handleOpenEditorDirectly}
       />
 
       {view === 'upload' ? (
@@ -135,6 +150,7 @@ const DigitizerApp: React.FC = () => {
           onFileSelect={handleFileSelection}
           onRemoveFile={removeSelectedFile}
           onProcess={processExam}
+          onOpenEditor={handleOpenEditorDirectly}
         />
       ) : (
         <EditorScreen
@@ -147,6 +163,7 @@ const DigitizerApp: React.FC = () => {
           solveLines={solveLines}
           onSolveLinesChange={updateSolveLines}
           onUpdateFigureImage={updateFigureImage}
+          onInsertSample={() => updateMarkdown(SAMPLE_EXAM_MARKDOWN)}
         />
       )}
 

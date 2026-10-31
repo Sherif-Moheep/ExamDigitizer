@@ -1,6 +1,6 @@
 import React from 'react';
 import logo from '../../assets/logo.png';
-import { GithubIcon, ArrowLeftIcon, MoonIcon, SunIcon, SettingsIcon, PrintIcon } from './Icons';
+import { GithubIcon, ArrowLeftIcon, MoonIcon, SunIcon, SettingsIcon, PrintIcon, EditIcon } from './Icons';
 
 type HeaderProps = {
   view: 'upload' | 'editor';
@@ -8,6 +8,7 @@ type HeaderProps = {
   onOpenSettings: () => void;
   theme: 'light' | 'dark';
   onToggleTheme: () => void;
+  onOpenEditor?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -16,6 +17,7 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenSettings,
   theme,
   onToggleTheme,
+  onOpenEditor,
 }) => {
   return (
     <header className="bg-app-card border-b border-border py-3 px-6 flex items-center justify-between h-16 z-10 shadow-sm print:hidden">
@@ -35,6 +37,16 @@ export const Header: React.FC<HeaderProps> = ({
         >
           <GithubIcon size={16} />
         </a>
+
+        {view === 'upload' && onOpenEditor && (
+          <button
+            onClick={onOpenEditor}
+            className="inline-flex items-center justify-center gap-2 py-[10px] px-[18px] bg-app-card text-text-secondary border border-border text-sm font-semibold rounded-md cursor-pointer transition-all duration-200 hover:bg-app-hover hover:text-text-primary hover:border-text-muted shadow-sm"
+          >
+            <EditIcon size={16} />
+            Editor
+          </button>
+        )}
 
         {view === 'editor' && (
           <button

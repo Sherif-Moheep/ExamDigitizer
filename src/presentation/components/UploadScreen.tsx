@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { UploadIcon, PdfIcon, PlayIcon, InfoIcon } from './Icons';
+import { UploadIcon, PdfIcon, PlayIcon, InfoIcon, EditIcon } from './Icons';
 
 type UploadScreenProps = {
   selectedFile: File | null;
@@ -11,6 +11,7 @@ type UploadScreenProps = {
   onFileSelect: (file: File) => void;
   onRemoveFile: () => void;
   onProcess: () => void;
+  onOpenEditor: () => void;
 }
 
 export const UploadScreen: React.FC<UploadScreenProps> = ({
@@ -23,6 +24,7 @@ export const UploadScreen: React.FC<UploadScreenProps> = ({
   onFileSelect,
   onRemoveFile,
   onProcess,
+  onOpenEditor,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -36,6 +38,8 @@ export const UploadScreen: React.FC<UploadScreenProps> = ({
     if (file) {
       onFileSelect(file);
     }
+    // Reset value so re-selecting the same file triggers change
+    e.target.value = '';
   };
 
   const formatSize = (bytes: number): string => {
@@ -133,6 +137,26 @@ export const UploadScreen: React.FC<UploadScreenProps> = ({
               </button>
             </div>
           )}
+        </div>
+
+        <div className="flex items-center gap-3">
+          <div className="flex-1 h-px bg-border" />
+          <span className="text-xs uppercase tracking-wider text-text-muted font-medium">Or</span>
+          <div className="flex-1 h-px bg-border" />
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <button
+            type="button"
+            onClick={onOpenEditor}
+            className="w-full inline-flex items-center justify-center gap-2 py-3 px-4 bg-app-card hover:bg-app-hover text-text-primary border border-border text-sm font-semibold rounded-lg cursor-pointer transition-all duration-200 hover:border-text-muted/40 shadow-sm"
+          >
+            <EditIcon size={16} />
+            Open Editor Directly
+          </button>
+          <p className="text-center text-[0.75rem] text-text-muted">
+            Have existing markdown? Jump straight into the editor to preview and format with syntax examples.
+          </p>
         </div>
 
         {error && (

@@ -25,7 +25,7 @@ export function useUploadScreen({ onSuccess, onOpenSettings }: UseUploadScreenPr
   const abortControllerRef = useRef<AbortController | null>(null);
 
   const handleFileSelection = (file: File) => {
-    if (file.type !== 'application/pdf') {
+    if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
       setError('Only PDF files are supported.');
       return;
     }
