@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { PdfPage } from '../../domain/models/PdfPage';
 import { PdfThumbnails } from './PdfThumbnails';
 import { FigureCropper } from './FigureCropper';
+import { CopyIcon, CheckIcon } from './Icons';
 
 type EditorScreenProps = {
   markdown: string;
@@ -32,6 +33,43 @@ export const EditorScreen: React.FC<EditorScreenProps> = ({
   const [cropTarget, setCropTarget] = useState<{ figureKey: string; pageNum: number } | null>(
     null
   );
+  const [copied, setCopied] = useState(false);
+  const copyTimeoutRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (copyTimeoutRef.current) {
+        clearTimeout(copyTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  const handleCopyMarkdown = async () => {
+    if (!markdown) return;
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(markdown);
+      } else {
+        const textarea = document.createElement('textarea');
+        textarea.value = markdown;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+      }
+      setCopied(true);
+      if (copyTimeoutRef.current) {
+        clearTimeout(copyTimeoutRef.current);
+      }
+      copyTimeoutRef.current = window.setTimeout(() => {
+        setCopied(false);
+      }, 2000);
+    } catch (err) {
+      console.error('Failed to copy markdown: ', err);
+    }
+  };
 
   // Handle click events on crop buttons inside the rendered HTML container
   useEffect(() => {
@@ -84,13 +122,38 @@ export const EditorScreen: React.FC<EditorScreenProps> = ({
               </button>
             )}
           </div>
-          <span
-            className="text-[0.8rem] text-text-muted flex items-center gap-1.5 transition-opacity duration-200"
-            style={{ opacity: syncStatus === 'Syncing...' ? 0.7 : 1 }}
-          >
-            <span className="w-2 h-2 rounded-full bg-[#10b981]" />
-            {syncStatus}
-          </span>
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={handleCopyMarkdown}
+              disabled={!markdown}
+              className={`inline-flex items-center gap-1.5 text-[0.8rem] py-[3px] px-2.5 rounded-sm border transition-all duration-200 shadow-sm select-none ${
+                copied
+                  ? 'bg-emerald-50 text-emerald-600 border-emerald-300 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-800'
+                  : 'bg-app-card text-text-secondary hover:text-text-primary hover:bg-app-hover hover:border-text-muted border-border'
+              } ${!markdown ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer active:scale-95'}`}
+              title={copied ? 'Copied to clipboard!' : 'Copy raw Markdown to clipboard'}
+            >
+              {copied ? (
+                <>
+                  <CheckIcon size={14} className="text-emerald-600 dark:text-emerald-400" />
+                  <span className="font-medium">Copied!</span>
+                </>
+              ) : (
+                <>
+                  <CopyIcon size={14} />
+                  <span>Copy Markdown</span>
+                </>
+              )}
+            </button>
+            <span
+              className="text-[0.8rem] text-text-muted flex items-center gap-1.5 transition-opacity duration-200"
+              style={{ opacity: syncStatus === 'Syncing...' ? 0.7 : 1 }}
+            >
+              <span className="w-2 h-2 rounded-full bg-[#10b981]" />
+              {syncStatus}
+            </span>
+          </div>
         </div>
         <textarea
           value={markdown}
