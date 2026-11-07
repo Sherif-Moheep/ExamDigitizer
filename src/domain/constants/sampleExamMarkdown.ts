@@ -50,7 +50,7 @@ Apply the Master Theorem to find the asymptotic tight bound $\\Theta$ of $T(n)$.
 - Headers & Meta: Use # for institution, ## for faculty/dept, bullet list (* **Key:** Value) for info, and --- underneath.
 - Question Labels: Use bold prefix (**1.**, **Question 1:**, **Problem (1)**) so question styling is applied.
 - Math Formulas: $...$ for inline math, $$...$$ for centered block math equations.
-- Dynamic Lines: [SOLVE_SPACE_HERE] inserts answer lines matching the "Answer Lines" slider in the preview bar.
+- Dynamic Lines: [SOLVE_SPACE_HERE] inserts answer lines matching the "Answer Lines" slider in the preview bar (set to 0 or Off to disable).
 - Fixed Lines: [SOLVE_SPACE:n] inserts exactly n answer lines (e.g., [SOLVE_SPACE:6]).
 - Page Breaks: [PAGE_BREAK] or \\pagebreak forces a print page break.
 -->

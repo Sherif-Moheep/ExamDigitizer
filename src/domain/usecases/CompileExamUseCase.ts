@@ -40,12 +40,13 @@ export class CompileExamUseCase {
 
     // 3. Inject solve spaces (both default and custom sizes)
     const defaultLinesHtml = this.generateLines(solveLines);
-    parsedHtml = parsedHtml
-      .replaceAll("<p>[SOLVE_SPACE_HERE]</p>", defaultLinesHtml)
-      .replaceAll("[SOLVE_SPACE_HERE]", defaultLinesHtml);
+    parsedHtml = parsedHtml.replace(
+      /(?:<p>\s*)?\[SOLVE_SPACE_HERE\](?:\s*<\/p>)?/gi,
+      defaultLinesHtml
+    );
 
     parsedHtml = parsedHtml.replace(
-      /(?:<p>)?\[SOLVE_SPACE:(\d+)\](?:<\/p>)?/g,
+      /(?:<p>\s*)?\[SOLVE_SPACE:(\d+)\](?:\s*<\/p>)?/gi,
       (_, count) => this.generateLines(parseInt(count, 10))
     );
 
@@ -155,6 +156,9 @@ export class CompileExamUseCase {
   private generateLines(
     numberOfLines: number
   ): string {
+    if (numberOfLines <= 0) {
+      return '';
+    }
     let linesHtml = "<div class='solve-space-container'>";
     for (let i = 0; i < numberOfLines; i++) {
       linesHtml += "<div class='writing-line'></div>";
