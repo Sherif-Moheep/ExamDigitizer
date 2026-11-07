@@ -35,6 +35,22 @@ export const EditorScreen: React.FC<EditorScreenProps> = ({
   );
   const [copied, setCopied] = useState(false);
   const copyTimeoutRef = useRef<number | null>(null);
+  const lastNonZeroLinesRef = useRef<number>(solveLines > 0 ? solveLines : 6);
+
+  useEffect(() => {
+    if (solveLines > 0) {
+      lastNonZeroLinesRef.current = solveLines;
+    }
+  }, [solveLines]);
+
+  const handleToggleSolveLines = () => {
+    if (solveLines === 0) {
+      onSolveLinesChange(lastNonZeroLinesRef.current || 6);
+    } else {
+      lastNonZeroLinesRef.current = solveLines;
+      onSolveLinesChange(0);
+    }
+  };
 
   useEffect(() => {
     return () => {
@@ -171,18 +187,37 @@ export const EditorScreen: React.FC<EditorScreenProps> = ({
           </h3>
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
-              <span className="text-[0.8rem] text-text-secondary">Answer Lines:</span>
+              <button
+                type="button"
+                onClick={handleToggleSolveLines}
+                className="text-[0.8rem] text-text-secondary hover:text-text-primary transition-colors cursor-pointer bg-transparent border-none p-0 select-none"
+                title={solveLines === 0 ? 'Click to enable answer lines' : 'Click to disable answer lines'}
+              >
+                Answer Lines:
+              </button>
               <input
                 type="range"
-                min={2}
+                min={0}
                 max={20}
                 value={solveLines}
                 onChange={(e) => onSolveLinesChange(parseInt(e.target.value, 10))}
-                className="w-24 h-1 bg-border rounded-lg appearance-none cursor-pointer accent-primary"
+                className={`w-24 h-1 bg-border rounded-lg appearance-none cursor-pointer accent-primary transition-opacity duration-150 ${
+                  solveLines === 0 ? 'opacity-40 hover:opacity-75' : 'opacity-100'
+                }`}
+                title={`Answer lines: ${solveLines === 0 ? 'Off' : solveLines}`}
               />
-              <span className="text-[0.8rem] text-text-secondary font-mono bg-border py-[2px] px-[6px] rounded-sm">
-                {solveLines}
-              </span>
+              <button
+                type="button"
+                onClick={handleToggleSolveLines}
+                className={`text-[0.8rem] font-mono py-[2px] px-[6px] rounded-sm border cursor-pointer select-none transition-all duration-150 ${
+                  solveLines === 0
+                    ? 'bg-app-card text-text-muted border-border hover:text-text-primary hover:border-text-muted'
+                    : 'bg-border text-text-secondary border-transparent hover:text-text-primary'
+                }`}
+                title={solveLines === 0 ? 'Click to enable answer lines' : 'Click to disable answer lines'}
+              >
+                {solveLines === 0 ? 'Off' : solveLines}
+              </button>
             </div>
             <span className="text-[0.8rem] text-text-secondary bg-border py-[2px] px-[6px] rounded-sm">
               A4 Document
